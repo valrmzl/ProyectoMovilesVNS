@@ -11,11 +11,11 @@ class Balance extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: SizedBox(height: 320,child: _head()),),
+              child: SizedBox(height: 280,child: _head()),),
             SliverToBoxAdapter(
               child:
                Padding(
-                 padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                  child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -32,6 +32,30 @@ class Balance extends StatelessWidget {
                              ]
                              ),
                ),
+            ),
+
+            SliverList(delegate: SliverChildBuilderDelegate((context, index){
+              return ListTile(leading: ClipRRect(borderRadius: BorderRadius.circular(5),
+                child: 
+                  Icon( Icons.credit_score_outlined, size: 30,color: Colors.black, )
+                ),
+                title: Text("Nomina trabajo", style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,)
+                                ),
+                subtitle: Text("26/Sept/2023", style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                )
+                                ),
+                trailing: Text('\$ 2500', style: TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 19,
+                  color: Colors.green
+                ),),
+
+              );
+
+            },
+            )
             )
           ],
         )
@@ -45,7 +69,7 @@ class Balance extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                height: 180,
+                height: 140,
                 decoration:
                   BoxDecoration(color: Color.fromARGB(255, 22, 165, 110),
                   borderRadius: BorderRadius.only(
@@ -91,7 +115,7 @@ class Balance extends StatelessWidget {
             ],
           ),
           Positioned(
-            top:130,
+            top:90,
             left: 70,
             child: Container(
               height: 170,
