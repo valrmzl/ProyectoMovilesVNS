@@ -101,7 +101,7 @@ class Balance extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Buenas tares",
+                      Text("Buenas tardes",
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
