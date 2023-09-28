@@ -9,9 +9,6 @@ import 'package:proyecto_vsn/Screens/profile.dart';
 
 import 'ahorros.dart';
 
-
-
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -20,16 +17,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int selectedPage =0;
+  int selectedPage = 0;
+  final List<String> titles = ['Balance', 'Ingresos', 'Gatsos', 'Ahorros'];
   final List<Widget> _pages = [
     const Balance(),
     const Ingresos(),
     const Gastos(),
     const Ahorros(),
-  
-
-    
-
   ];
   @override
   Widget build(BuildContext context) {
@@ -37,26 +31,29 @@ class _HomePageState extends State<HomePage> {
       title: 'Material App',
       home: Scaffold(
         drawer: NavBar(),
-        appBar: AppBar(
-          title: Text("aaa")
-        ),
-        
-        
+        appBar: AppBar(title: Text(titles[selectedPage])),
         body: _pages[selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: selectedPage,
-          onTap: (int index){
+          onTap: (int index) {
             setState(() {
               selectedPage = index;
             });
-          }, items: [
-            BottomNavigationBarItem(icon: Icon(Icons.currency_exchange), label: 'Balance'),
-            BottomNavigationBarItem(icon: Icon(Icons.arrow_circle_up), label: 'Ingresos'),
-            BottomNavigationBarItem(icon: Icon(Icons.arrow_circle_down), label: 'Gatsos'),
-            BottomNavigationBarItem(icon: Icon(Icons.savings), label: 'Ahorros'),
-          ],   selectedItemColor: Color.fromARGB(255, 15, 182, 138), // Color de los íconos seleccionados
-              unselectedItemColor: Colors.grey, // Color de los íconos no seleccionados
-
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.currency_exchange), label: 'Balance'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_up), label: 'Ingresos'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.arrow_circle_down), label: 'Gatsos'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.savings), label: 'Ahorros'),
+          ],
+          selectedItemColor: Color.fromARGB(
+              255, 15, 182, 138), // Color de los íconos seleccionados
+          unselectedItemColor:
+              Colors.grey, // Color de los íconos no seleccionados
         ),
       ),
     );
