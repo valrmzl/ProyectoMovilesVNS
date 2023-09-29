@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_vsn/Screens/login_page.dart';
+import 'package:proyecto_vsn/Screens/home_page.dart';
 import 'package:proyecto_vsn/Screens/welcome.dart';
 
 void main() => runApp(
@@ -10,7 +11,7 @@ void main() => runApp(
         color:Color.fromARGB(255, 47, 125, 121),
       ), 
     ),
-    home: LoginPage(),
+    home: HomePage(),
   ),
 );
 

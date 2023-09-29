@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_vsn/Screens/profile.dart';
 
 
 bool isSwitched = false;
@@ -45,7 +46,12 @@ class _NavBarState extends State<NavBar> {
         ListTile(
           leading: Icon(Icons.app_settings_alt),
           title: Text("Configuracion"),
-          onTap: (){},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Profile(), // Reemplaza 'Configuraciones' con el nombre correcto de tu página.
+            ));
+          },
+
 
         ),
         ListTile(
