@@ -32,11 +32,15 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
         drawer: NavBar(),
         appBar: AppBar(
+          elevation: 0,
           title: Text(
             titles[selectedPage],
             style: TextStyle(color: Colors.black),
           ),
           backgroundColor: Color.fromARGB(255, 141, 240, 223),
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
         ),
         body: _pages[selectedPage],
         bottomNavigationBar: BottomNavigationBar(

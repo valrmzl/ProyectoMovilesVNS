@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_vsn/Screens/ahorro_item.dart';
+import 'package:proyecto_vsn/Screens/nueva_meta.dart';
 
 class Ahorro {
   final String nombre;
@@ -43,7 +44,13 @@ class Ahorros extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigate to the second screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NuevaMeta()),
+                        );
+                      },
                       child: Text('+ Nueva meta',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
