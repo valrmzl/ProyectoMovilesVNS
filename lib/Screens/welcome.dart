@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_vsn/Screens/create_account.dart';
+import 'package:proyecto_vsn/Screens/login_page.dart';
 
 void main() => runApp(const Welcome());
 
@@ -39,7 +41,7 @@ class Welcome extends StatelessWidget {
                 height: MediaQuery.of(context).size.height/3,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("assets/images/imagen2.jpeg")
+                    image: AssetImage("assets/images/imagen1.jpeg")
                   ),
                 ),
               ),
@@ -54,6 +56,7 @@ class Welcome extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
                     },
                     shape: RoundedRectangleBorder(
                       side: BorderSide(
@@ -87,6 +90,7 @@ class Welcome extends StatelessWidget {
                     minWidth: double.infinity,
                     height: 60,
                     onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateAccount()));
                     },
                     color: Colors.yellow,
                     elevation: 0,
