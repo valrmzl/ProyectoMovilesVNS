@@ -84,7 +84,7 @@ class _EgresosState extends State<Egresos> {
           Container(
   height: MediaQuery.of(context).size.height * 1,
   child: ListView.separated(
-    itemCount: categorias.length,
+    itemCount: categorias.length+8,
     separatorBuilder: (context, index) {
       return Divider();
     },
