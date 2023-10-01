@@ -1,182 +1,138 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_vsn/Screens/home_page.dart';
 
-class CreateAccount extends StatefulWidget {
-  const CreateAccount({Key? key}) : super(key: key);
-
-  @override
-  _CreateAccountState createState() => _CreateAccountState();
-}
-
-class _CreateAccountState extends State<CreateAccount> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  final TextEditingController emailAddressController = TextEditingController();
-  final TextEditingController passwordCreateController = TextEditingController();
-  final TextEditingController passwordConfirmController = TextEditingController();
-
-  bool passwordCreateVisibility = true;
-  bool passwordConfirmVisibility = true;
+class CreateAccount extends StatelessWidget {
+  const CreateAccount({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 1,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.fitWidth,
-                image: AssetImage(
-                  'assets/images/createAccount_bg@2x.png',
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
+        ),
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "Sign up",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Crea una cuenta",
+                        style: TextStyle(
+                            fontSize: 15, color: Colors.grey[700]),
+                      ),
+                    ],
+                  ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(24, 24, 0, 20),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // Agrega aquí tu imagen de logo
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      children: <Widget>[
+                        makeInput(label: "Nombre "),
+                        makeInput(label: "Apellido "),
+                        makeInput(label: "Email"),
+                        makeInput(label: "Password", obscureText: true),
+                        makeInput(label: "Confirmar password", obscureText: true),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                'Get Started',
-                                // Estilo de texto
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Text(
-                                  'Create your account below.',
-                                  // Estilo de texto
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
-                            child: TextFormField(
-                              controller: emailAddressController,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                labelText: 'Email Address',
-                                // Otros atributos de estilo
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                            child: TextFormField(
-                              controller: passwordCreateController,
-                              obscureText: passwordCreateVisibility,
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                // Otros atributos de estilo
-                                suffixIcon: InkWell(
-                                  onTap: () => setState(() {
-                                    passwordCreateVisibility =
-                                        !passwordCreateVisibility;
-                                  }),
-                                  focusNode: FocusNode(skipTraversal: true),
-                                  child: Icon(
-                                    passwordCreateVisibility
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-                            child: TextFormField(
-                              controller: passwordConfirmController,
-                              obscureText: passwordConfirmVisibility,
-                              decoration: InputDecoration(
-                                labelText: 'Confirm Password',
-                                // Otros atributos de estilo
-                                suffixIcon: InkWell(
-                                  onTap: () => setState(() {
-                                    passwordConfirmVisibility =
-                                        !passwordConfirmVisibility;
-                                  }),
-                                  focusNode: FocusNode(skipTraversal: true),
-                                  child: Icon(
-                                    passwordConfirmVisibility
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 24),
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => HomePage()), // Reemplaza CreateAccount() con el constructor real de tu página de creación de cuentas
-                                  );
-                              },
-                              child: Text('Create Account'),
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                             
-                              TextButton(
-                                onPressed: () {
-                                  // Navega a la página de inicio de sesión
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(
-                                  'Already have an account? Login',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 3, left: 3),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                            top: BorderSide(color: Colors.black),
+                            left: BorderSide(color: Colors.black),
+                            right: BorderSide(color: Colors.black),
+                          )),
+                      child: MaterialButton(
+                        minWidth: double.infinity,
+                        height: 60,
+                        onPressed: () {},
+                        color: Colors.greenAccent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Text(
+                          "Sign up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 18),
+                        ),
                       ),
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("¿Ya tienes una cuenta?   "),
+                      Text(
+                        "Login",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
-          ),
-        ],
+            
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget makeInput({label, obscureText = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: TextStyle(
+              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        TextField(
+          obscureText: obscureText,
+          decoration: InputDecoration(
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
+            border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey)),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+      ],
     );
   }
 }
