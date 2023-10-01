@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_vsn/Screens/ingreso_item.dart';
 // ignore: unused_import
 import 'package:proyecto_vsn/Screens/nuevo_ingreso.dart';
 
-class Ahorro {
-  final String nombre;
-  final double meta;
-  final String origen;
-  final DateTime fecha;
-  final double progreso;
 
-  Ahorro({
-    required this.nombre,
-    required this.meta,
-    required this.origen,
-    required this.fecha,
-    required this.progreso,
-  });
-}
 
-class Ingresos extends StatelessWidget {
+class Ingresos extends StatefulWidget {
   const Ingresos({super.key});
 
   @override
+  State<Ingresos> createState() => _IngresosState();
+}
+
+class _IngresosState extends State<Ingresos> {
+  @override
   Widget build(BuildContext context) {
+    List<String> categorias = [
+      'Salario',
+      'Aguinaldo',
+      'Bonos',
+      'Emprendimiento',
+      'Otros'
+    ];
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -81,9 +80,38 @@ class Ingresos extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade800))
             ]),
           ),
+          Container(
+  height: MediaQuery.of(context).size.height * 1,
+  child: ListView.separated(
+    itemCount: categorias.length,
+    separatorBuilder: (context, index) {
+      return Divider();
+    },
+    itemBuilder: (context, index) {
+      return IngresoItem(
+        titulo: "elotes",
+        subtitulo1: "comida",
+        fecha: "01/10/23",// Reemplaza con el valor correcto
+        precio: 011023, // Reemplaza con el valor correcto
+      );
+    },
+  ),
+)
+
+
+            
+            
+          
           
         ],
       ),
     );
   }
+}
+
+Widget categoriaChip(String titulo, Color chipColor ){
+  return Chip(
+    label: Text(titulo),
+    backgroundColor: chipColor,
+  );
 }

@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_vsn/Screens/ahorro_item.dart';
+import 'package:proyecto_vsn/Screens/egreso_item.dart';
+import 'package:proyecto_vsn/Screens/ingreso_item.dart';
+// ignore: unused_import
 import 'package:proyecto_vsn/Screens/nuevo_egreso.dart';
 
-class Ahorro {
-  final String nombre;
-  final double meta;
-  final String origen;
-  final DateTime fecha;
-  final double progreso;
 
-  Ahorro({
-    required this.nombre,
-    required this.meta,
-    required this.origen,
-    required this.fecha,
-    required this.progreso,
-  });
-}
 
-class Gastos extends StatelessWidget {
-  const Gastos({super.key});
+class Egresos extends StatefulWidget {
+  const Egresos({super.key});
 
   @override
+  State<Egresos> createState() => _EgresosState();
+}
+
+class _EgresosState extends State<Egresos> {
+  @override
   Widget build(BuildContext context) {
+    List<String> categorias = [
+      'Salario',
+      'Aguinaldo',
+      'Bonos',
+      'Emprendimiento',
+      'Otros'
+    ];
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -36,7 +36,7 @@ class Gastos extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: Text(
-                      'Tus Gastos',
+                      'Tus Egresos',
                       style:
                           TextStyle(fontSize: 15, color: Colors.grey.shade800),
                     ),
@@ -45,16 +45,17 @@ class Gastos extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: TextButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> NuevoEgreso()));
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=> NuevoEgreso()));
+                         
                       },
-                      child: Text('+ Nuevo egreso',
+                      child: Text('+ Nuevo ingreso',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                     ),
                   )
                 ],
               ),
-              Text('Tu ahorro',
+              Text('Tus Egresos',
                   style: TextStyle(fontSize: 17, color: Colors.grey.shade800)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -80,9 +81,38 @@ class Gastos extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade800))
             ]),
           ),
+          Container(
+  height: MediaQuery.of(context).size.height * 1,
+  child: ListView.separated(
+    itemCount: categorias.length,
+    separatorBuilder: (context, index) {
+      return Divider();
+    },
+    itemBuilder: (context, index) {
+      return EgresoItem(
+        titulo: "elotes",
+        subtitulo1: "comida",
+        fecha: "01/10/23",// Reemplaza con el valor correcto
+        precio: 011023, // Reemplaza con el valor correcto
+      );
+    },
+  ),
+)
+
+
+            
+            
+          
           
         ],
       ),
     );
   }
+}
+
+Widget categoriaChip(String titulo, Color chipColor ){
+  return Chip(
+    label: Text(titulo),
+    backgroundColor: chipColor,
+  );
 }

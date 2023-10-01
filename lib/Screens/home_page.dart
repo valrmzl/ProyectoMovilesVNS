@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     const Balance(),
     const Ingresos(),
-    const Gastos(),
+    const Egresos(),
     Ahorros(),
   ];
   @override
