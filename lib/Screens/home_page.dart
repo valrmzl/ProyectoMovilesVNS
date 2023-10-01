@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     const Balance(),
     const Ingresos(),
     const Gastos(),
-    const Ahorros(),
+    Ahorros(),
   ];
   @override
   Widget build(BuildContext context) {

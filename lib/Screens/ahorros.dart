@@ -19,7 +19,14 @@ class Ahorro {
 }
 
 class Ahorros extends StatelessWidget {
-  const Ahorros({super.key});
+  Ahorros({super.key});
+
+  final Ahorro item = Ahorro(
+      nombre: 'carro',
+      meta: 200000,
+      origen: 'Tarjeta',
+      fecha: DateTime(2026),
+      progreso: 20000);
 
   @override
   Widget build(BuildContext context) {
@@ -84,13 +91,12 @@ class Ahorros extends StatelessWidget {
                   style: TextStyle(color: Colors.grey.shade800))
             ]),
           ),
-          AhorroItem(
-              data: Ahorro(
-                  nombre: 'carro',
-                  meta: 200000,
-                  origen: 'Tarjeta',
-                  fecha: DateTime(2026),
-                  progreso: 20000)),
+          AhorroItem(data: item),
+          AhorroItem(data: item),
+          AhorroItem(data: item),
+          AhorroItem(data: item),
+          AhorroItem(data: item),
+          AhorroItem(data: item),
         ],
       ),
     );
