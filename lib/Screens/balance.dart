@@ -57,9 +57,9 @@ class Balance extends StatelessWidget {
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 19,
-                      color: Colors.green),
+                      color: geter()[index].tipo!? Colors.green: Colors.red,
                 ),
-              );
+              ));
             },
             childCount: geter().length
           ))

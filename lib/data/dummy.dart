@@ -5,6 +5,7 @@ class money{
   String? concepto;
   String? fecha;
   String? fee;
+  bool? tipo;
 
 
   double? buy;
