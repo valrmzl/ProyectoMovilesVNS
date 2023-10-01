@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_vsn/Screens/login_page.dart';
 import 'package:proyecto_vsn/Screens/profile.dart';
 
 
@@ -82,7 +83,10 @@ class _NavBarState extends State<NavBar> {
         ListTile(
           leading: Icon(Icons.logout),
           title: Text("Cerrar Sesion"),
-          onTap: (){},
+          onTap: (){
+            Navigator.pop(context);
+             Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+          },
           
         ),
         ],

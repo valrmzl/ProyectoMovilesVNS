@@ -74,7 +74,7 @@ class LoginPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
                         },
-                        color: Colors.greenAccent,
+                        color: Color.fromARGB(255, 184, 243, 223),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
