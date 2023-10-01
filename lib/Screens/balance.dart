@@ -77,7 +77,7 @@ class Balance extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 1,
               height: 140,
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 22, 165, 110),
+                  color: Color.fromARGB(255, 184, 243, 223),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20))),
@@ -107,12 +107,12 @@ class Balance extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
-                              color: Colors.white)),
+                              color: Colors.black)),
                       Text("Valeria Ramirez",
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
-                              color: Colors.white)),
+                              color: Colors.black)),
                     ],
                   ),
                 )

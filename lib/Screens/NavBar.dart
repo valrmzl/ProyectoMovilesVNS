@@ -19,8 +19,10 @@ class _NavBarState extends State<NavBar> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text("Valeria Ramirez"),
-            accountEmail: Text("valeria.ramirez@iteso.mx"),
+            accountName: Text("Valeria Ramirez", style: TextStyle(color: Colors.black,
+            fontWeight: FontWeight.bold),),
+            accountEmail: Text("valeria.ramirez@iteso.mx", style: TextStyle(color: Colors.black,
+            fontWeight: FontWeight.bold, )),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network("https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80",
@@ -30,15 +32,15 @@ class _NavBarState extends State<NavBar> {
                  ),
             ),
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
-              /*
+              //color: Colors.blueGrey,
+              
               image: DecorationImage(
-                image: NetworkImage(
-                  "https://images.unsplash.com/photo-1695015316959-dba54e216898?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxjb2xsZWN0aW9uLXBhZ2V8OHx6dTdpdUZNNmE3OHx8ZW58MHx8fHx8&auto=format&fit=crop&w=500&q=60"
+                image: AssetImage(
+                  "assets/images/imagen3.jpeg"
                 ),
                 fit: BoxFit.cover,
               )
-              */
+              
             ),
 
              )

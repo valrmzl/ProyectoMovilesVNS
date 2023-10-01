@@ -27,7 +27,7 @@ class Ingresos extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 141, 240, 223),
+            color: Color.fromARGB(255, 184, 243, 223),
             height: MediaQuery.of(context).size.height * 0.2,
             child: Column(children: [
               Row(

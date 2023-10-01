@@ -130,7 +130,7 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        color: Colors.greenAccent,
+                        color: Color.fromARGB(255, 184, 243, 223),
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),

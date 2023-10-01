@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             titles[selectedPage],
             style: TextStyle(color: Colors.black),
           ),
-          backgroundColor: Color.fromARGB(255, 141, 240, 223),
+          backgroundColor: Color.fromARGB(255, 184, 243, 223),
           iconTheme: IconThemeData(
             color: Colors.black,
           ),
