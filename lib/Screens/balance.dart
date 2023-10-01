@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:proyecto_vsn/data/list_dummy.dart';
 
 class Balance extends StatelessWidget {
   const Balance({Key? key}) : super(key: key);
@@ -38,21 +39,21 @@ class Balance extends StatelessWidget {
                 leading: ClipRRect(
                     borderRadius: BorderRadius.circular(5),
                     child: Icon(
-                      Icons.credit_score_outlined,
+                       geter()[index].icono,
                       size: 30,
                       color: Colors.black,
                     )),
-                title: Text("Nomina trabajo",
+                title: Text(geter()[index].concepto!,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
                     )),
-                subtitle: Text("26/Sept/2023",
+                subtitle: Text(geter()[index].fecha!,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                     )),
                 trailing: Text(
-                  '\$ 2500',
+                  geter()[index].fee!,
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 19,
@@ -60,6 +61,7 @@ class Balance extends StatelessWidget {
                 ),
               );
             },
+            childCount: geter().length
           ))
         ],
       )),
