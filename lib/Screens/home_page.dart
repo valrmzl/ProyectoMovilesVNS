@@ -18,7 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedPage = 0;
-  final List<String> titles = ['Balance', 'Ingresos', 'Gatsos', 'Ahorros'];
+  final List<String> titles = ['Balance', 'Ingresos', 'Gastos', 'Ahorros'];
   final List<Widget> _pages = [
     const Balance(),
     const Ingresos(),
@@ -31,7 +31,13 @@ class _HomePageState extends State<HomePage> {
       title: 'Material App',
       home: Scaffold(
         drawer: NavBar(),
-        appBar: AppBar(title: Text(titles[selectedPage])),
+        appBar: AppBar(
+          title: Text(
+            titles[selectedPage],
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Color.fromARGB(255, 141, 240, 223),
+        ),
         body: _pages[selectedPage],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: selectedPage,
@@ -46,7 +52,7 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.arrow_circle_up), label: 'Ingresos'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_circle_down), label: 'Gatsos'),
+                icon: Icon(Icons.arrow_circle_down), label: 'Gastos'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.savings), label: 'Ahorros'),
           ],
