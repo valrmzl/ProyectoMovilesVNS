@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:proyecto_vsn/Screens/calendar.dart';
 import 'package:proyecto_vsn/data/list_dummy.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-class Balance extends StatelessWidget {
+class Balance extends StatefulWidget {
   const Balance({Key? key}) : super(key: key);
 
+  @override
+  State<Balance> createState() => _BalanceState();
+}
+
+class _BalanceState extends State<Balance> {
+  DateTime? selectedDay;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +20,15 @@ class Balance extends StatelessWidget {
           child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(height: 280, child: _head(context)),
+            child: SizedBox(
+              height: 280, child: _head(context)
+              ),
           ),
+          SliverToBoxAdapter(
+            child: Calendar()
+          ),
+          
+         
           
           SliverToBoxAdapter(
             child: Padding(
@@ -22,6 +36,7 @@ class Balance extends StatelessWidget {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    
                     Text("Historial de transacciones",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -32,12 +47,13 @@ class Balance extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 15,
                             color: Colors.grey)),
+                            
                       
                   ]),
             ),
           ),
-          
-      
+
+              
           SliverList(delegate: SliverChildBuilderDelegate(
             (context, index) {
               return ListTile(
@@ -253,11 +269,14 @@ class Balance extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 17,
                             color: Colors.white)),
+                          
                   ],
                 ),
+                
               )
             ]),
           ),
+          
         )
       ],
     );
