@@ -51,7 +51,7 @@ class _NavBarState extends State<NavBar> {
           title: Text("Configuracion"),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => Profile(), // Reemplaza 'Configuraciones' con el nombre correcto de tu página.
+              builder: (context) => ProfileScreen(), // Reemplaza 'Configuraciones' con el nombre correcto de tu página.
             ));
           },
 
