@@ -19,6 +19,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
 
+  // Variables para el menú desplegable de divisas
+  List<String> _currencies = ['USD', 'EUR', 'JPY', 'MX'];
+  String _selectedCurrency = 'MX';
+
   // Método para mostrar el cuadro de diálogo de edición
   Future<void> _showEditDialog() async {
     await showDialog(
@@ -95,7 +99,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: Colors.black,
             ),
             actions: [
-            
               IconButton(
                 icon: Icon(
                   Icons.edit,
@@ -109,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 73),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
                 children: [
                   const SizedBox(
@@ -128,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     height: 22,
                   ),
                   Container(
-                    height: height * 0.43,
+                    height: height * 0.6,
                     child: LayoutBuilder(
                       builder: (context, constraints) {
                         double innerHeight = constraints.maxHeight;
@@ -150,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: Column(
                                   children: [
                                     const SizedBox(
-                                      height: 80,
+                                      height: 20,
                                     ),
                                     Text(
                                       _name,
@@ -164,8 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: 5,
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Column(
                                           children: [
@@ -180,8 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Text(
                                               _email,
                                               style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    39, 105, 171, 1),
+                                                color: Color.fromRGBO(39, 105, 171, 1),
                                                 fontFamily: 'Nunito',
                                                 fontSize: 20,
                                               ),
@@ -197,8 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             height: 50,
                                             width: 3,
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
+                                              borderRadius: BorderRadius.circular(100),
                                               color: Colors.grey,
                                             ),
                                           ),
@@ -216,8 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Text(
                                               _phoneNumber,
                                               style: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    39, 105, 171, 1),
+                                                color: Color.fromRGBO(39, 105, 171, 1),
                                                 fontFamily: 'Nunito',
                                                 fontSize: 20,
                                               ),
@@ -225,7 +224,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ],
                                         ),
                                       ],
-                                    )
+                                    ),
+                                    
+                                    // Agregar el segundo Container con el menú desplegable
+                                    Container(
+                                      height: 100,
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(top: 20),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        color: Colors.white,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Divisa',
+                                            style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontFamily: 'Nunito',
+                                              fontSize: 25,
+                                            ),
+                                          ),
+                                          SizedBox(height: 5),
+                                          DropdownButton<String?>(
+                                            value: _selectedCurrency,
+                                            items: _currencies.map((String currency) {
+                                              return DropdownMenuItem<String?>(
+                                                value: currency,
+                                                child: Text(
+                                                  currency,
+                                                  style: TextStyle(
+                                                    color: Color.fromRGBO(39, 105, 171, 1),
+                                                    fontFamily: 'Nunito',
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                _selectedCurrency = newValue ?? '';
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),

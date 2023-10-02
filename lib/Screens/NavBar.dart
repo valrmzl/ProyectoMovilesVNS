@@ -51,18 +51,13 @@ class _NavBarState extends State<NavBar> {
           title: Text("Configuracion"),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ProfileScreen(), // Reemplaza 'Configuraciones' con el nombre correcto de tu página.
+              builder: (context) => ProfileScreen(), 
             ));
           },
 
 
         ),
-        ListTile(
-          leading: Icon(Icons.currency_exchange),
-          title: Text("Divisa"),
-          onTap: (){},
-          
-        ),
+      
         ListTile(
   leading: Icon(Icons.lightbulb_sharp),
   title: Text("Modo Oscuro"),
