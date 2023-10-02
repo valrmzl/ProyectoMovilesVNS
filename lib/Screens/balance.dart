@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:proyecto_vsn/Screens/calendar.dart';
 import 'package:proyecto_vsn/data/list_dummy.dart';
 
 class Balance extends StatelessWidget {
@@ -14,6 +15,7 @@ class Balance extends StatelessWidget {
           SliverToBoxAdapter(
             child: SizedBox(height: 280, child: _head(context)),
           ),
+          
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -30,9 +32,12 @@ class Balance extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 15,
                             color: Colors.grey)),
+                      
                   ]),
             ),
           ),
+          
+      
           SliverList(delegate: SliverChildBuilderDelegate(
             (context, index) {
               return ListTile(

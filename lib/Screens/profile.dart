@@ -144,8 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               left: 0,
                               right: 0,
                               child: Container(
-                                height: innerHeight * 0.72,
-                                width: innerWidth,
+                                height: MediaQuery.of(context).size.width * 0.5,
+                                width: MediaQuery.of(context).size.width * 1,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(30),
                                   color: Colors.white,
@@ -276,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             Positioned(
-                              top: 0,
+                              top: MediaQuery.of(context).size.width * 0.03,
                               left: 0,
                               right: 0,
                               child: Center(
