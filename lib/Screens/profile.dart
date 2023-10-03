@@ -228,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     
                                     // Agregar el segundo Container con el menú desplegable
                                     Container(
-                                      height: 100,
+                                      height: 83,
                                       width: double.infinity,
                                       margin: EdgeInsets.only(top: 20),
                                       decoration: BoxDecoration(
@@ -276,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                             ),
                             Positioned(
-                              top: MediaQuery.of(context).size.width * 0.03,
+                              top: MediaQuery.of(context).size.width*0.001,
                               left: 0,
                               right: 0,
                               child: Center(
