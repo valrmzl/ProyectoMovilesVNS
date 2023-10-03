@@ -48,7 +48,7 @@ class _EgresosState extends State<Egresos> {
                          Navigator.push(context, MaterialPageRoute(builder: (context)=> NuevoEgreso()));
                          
                       },
-                      child: Text('+ Nuevo ingreso',
+                      child: Text('+ Nuevo egreso',
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                     ),

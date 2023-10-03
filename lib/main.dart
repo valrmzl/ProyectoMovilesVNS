@@ -13,7 +13,7 @@ void main() => runApp(
         color:Color.fromARGB(255, 47, 125, 121),
       ), 
     ),
-    home: HomePage(),
+    home: Welcome(),
   ),
 );
 

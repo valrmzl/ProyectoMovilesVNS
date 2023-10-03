@@ -27,7 +27,7 @@ class Welcome extends StatelessWidget {
                     fontSize: 30
                    ),),
                    SizedBox(height: 20,),
-                   Text("Texto que aun no se",
+                   Text("Tu App para llevar tus finanzas favorita",
                    textAlign: TextAlign.center,
                    style: TextStyle(
                     color: Colors.grey[700],
