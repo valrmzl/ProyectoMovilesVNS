@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:proyecto_vsn/Screens/home_page.dart';
-import 'package:proyecto_vsn/Screens/login_page.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -9,297 +6,115 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Variables para almacenar los datos del usuario
-  String _name = 'Valeria Ramirez';
-  String _email = 'val@gmail.com';
-  String _phoneNumber = '3321860328';
+  // Lista de países para el Dropdown
+  List<String> countries = ["México", "Estados Unidos", "Canadá", "España", "Argentina"];
 
-  // Controladores para los campos de edición
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneNumberController = TextEditingController();
-
-  // Variables para el menú desplegable de divisas
-  List<String> _currencies = ['USD', 'EUR', 'JPY', 'MX'];
-  String _selectedCurrency = 'MX';
-
-  // Método para mostrar el cuadro de diálogo de edición
-  Future<void> _showEditDialog() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Editar Perfil'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: 'Nombre'),
-              ),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: 'Correo'),
-              ),
-              TextField(
-                controller: _phoneNumberController,
-                decoration: InputDecoration(labelText: 'Número'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  // Actualizar los datos del usuario con los valores de los controladores
-                  _name = _nameController.text;
-                  _email = _emailController.text;
-                  _phoneNumber = _phoneNumberController.text;
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text('Guardar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Variable para controlar el valor seleccionado del Dropdown
+  String selectedCountry = "México";
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(98, 180, 123, 1),
-                Color.fromARGB(255, 184, 243, 223),
-              ],
-              begin: FractionalOffset.bottomCenter,
-              end: FractionalOffset.topCenter,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.grey),
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 16,
           ),
         ),
-        Scaffold(
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Color.fromRGBO(184, 243, 223, 0.5),
-            iconTheme: IconThemeData(
-              color: Colors.black,
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: _showEditDialog,
-              ),
-            ],
-          ),
-          backgroundColor: Color.fromARGB(0, 228, 21, 21),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              child: Column(
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: ListView(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              height: 115,
+              width: 115,
+              child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  const SizedBox(
-                    height: 20,
+                  const CircleAvatar(
+                    backgroundImage: AssetImage("assets/images/val.png"),
                   ),
-                  const Text(
-                    'MI PERFIL',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 34,
-                      fontFamily: 'Nisebuschgardens',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  Container(
-                    height: height * 0.6,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        double innerHeight = constraints.maxHeight;
-                        double innerWidth = constraints.maxWidth;
-                        return Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              right: 0,
-                              child: Container(
-                                height: MediaQuery.of(context).size.width * 0.5,
-                                width: MediaQuery.of(context).size.width * 1,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.white,
-                                ),
-                                child: Column(
-                                  children: [
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      _name,
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(39, 105, 171, 1),
-                                        fontFamily: 'Nunito',
-                                        fontSize: 37,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Correo',
-                                              style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontFamily: 'Nunito',
-                                                fontSize: 25,
-                                              ),
-                                            ),
-                                            Text(
-                                              _email,
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(39, 105, 171, 1),
-                                                fontFamily: 'Nunito',
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 25,
-                                            vertical: 8,
-                                          ),
-                                          child: Container(
-                                            height: 50,
-                                            width: 3,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(100),
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              'Número',
-                                              style: TextStyle(
-                                                color: Colors.grey[700],
-                                                fontFamily: 'Nunito',
-                                                fontSize: 25,
-                                              ),
-                                            ),
-                                            Text(
-                                              _phoneNumber,
-                                              style: TextStyle(
-                                                color: Color.fromRGBO(39, 105, 171, 1),
-                                                fontFamily: 'Nunito',
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                    // Agregar el segundo Container con el menú desplegable
-                                    Container(
-                                      height: 83,
-                                      width: double.infinity,
-                                      margin: EdgeInsets.only(top: 20),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.white,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Divisa',
-                                            style: TextStyle(
-                                              color: Colors.grey[700],
-                                              fontFamily: 'Nunito',
-                                              fontSize: 25,
-                                            ),
-                                          ),
-                                          SizedBox(height: 5),
-                                          DropdownButton<String?>(
-                                            value: _selectedCurrency,
-                                            items: _currencies.map((String currency) {
-                                              return DropdownMenuItem<String?>(
-                                                value: currency,
-                                                child: Text(
-                                                  currency,
-                                                  style: TextStyle(
-                                                    color: Color.fromRGBO(39, 105, 171, 1),
-                                                    fontFamily: 'Nunito',
-                                                    fontSize: 20,
-                                                  ),
-                                                ),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                _selectedCurrency = newValue ?? '';
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: MediaQuery.of(context).size.width*0.001,
-                              left: 0,
-                              right: 0,
-                              child: Center(
-                                child: ClipOval(
-                                  child: Image.asset(
-                                    'assets/images/val.png',
-                                    width: innerWidth * 0.40,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: Icon(
+                        Icons.camera_alt,
+                        size: 20,
+                        color: Color.fromARGB(255, 47, 125, 121),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 40), 
+          _buildInfoCard(Icons.person, "Valeria Ramirez", Color.fromARGB(255, 47, 125, 121)),
+          const SizedBox(height: 16), 
+          _buildInfoCard(Icons.email, "val@gmail.com", Color.fromARGB(255, 47, 125, 121)),
+          const SizedBox(height: 16), 
+          _buildInfoCard(Icons.phone, "3312143523", Color.fromARGB(255, 47, 125, 121)),
+          const SizedBox(height: 16), 
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            elevation: 4,
+            child: ListTile(
+              leading: Icon(
+                Icons.flag,
+                color: Color.fromARGB(255, 47, 125, 121),
+              ),
+              title: Text("Divisa"),
+              trailing: DropdownButton<String>(
+                value: selectedCountry,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedCountry = newValue;
+                    });
+                  }
+                },
+                items: countries.map((String country) {
+                  return DropdownMenuItem<String>(
+                    value: country,
+                    child: Text(country),
+                  );
+                }).toList(),
+              ),
+            ),
+            ),
+
+        ],
+      ),
     );
   }
+
+Card _buildInfoCard(IconData icon, String text, Color iconColor) {
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    elevation: 4,
+    child: ListTile(
+      leading: Icon(
+        icon,
+        color: iconColor,
+      ),
+      title: Text(text),
+    ),
+  );
+}
 }
