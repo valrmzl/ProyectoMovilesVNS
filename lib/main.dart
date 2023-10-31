@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Change Themes App',
           theme: state.themeData,
-          home: HomePage(),
+          home: LoginPage(),
         );
       },
     );

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_vsn/Screens/create_account.dart';
 import 'package:proyecto_vsn/Screens/home_page.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +73,20 @@ class LoginPage extends StatelessWidget {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
+                        onPressed: () async {
+                          // Solicitar permisos de cámara y galería
+                          var cameraStatus = await Permission.camera.request();
+                          var photosStatus = await Permission.photos.request();
+
+                          if (cameraStatus.isGranted && photosStatus.isGranted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              ),
+                            );
+                          } else {
+                          }
                         },
                         color: Color.fromARGB(255, 184, 243, 223),
                         elevation: 0,
@@ -87,31 +101,29 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: <Widget>[
-    Text("¿No tienes una cuenta? "),
-    GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop();
-        
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => CreateAccount(), // Reemplaza SignUpPage con el nombre de tu página de registro.
-          ),
-        );
-      },
-      child: Text(
-        "Sign up",
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-          color: Colors.black, // Cambia el color del texto si lo deseas
-        ),
-      ),
-    ),
-  ],
-),
-
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("¿No tienes una cuenta? "),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CreateAccount(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Sign up",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
