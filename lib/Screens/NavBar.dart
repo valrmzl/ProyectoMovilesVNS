@@ -22,57 +22,65 @@ class _NavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, themeState) {
-        return Drawer(
-          child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                accountName: Text("Valeria Ramirez"),
-                accountEmail: Text("valeria.ramirez@iteso.mx"),
-                currentAccountPicture: CircleAvatar(
-                  child: ClipOval(
-                    child: Image.network(
-                      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80",
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                decoration: BoxDecoration(
-                  color: themeState.themeData.colorScheme.secondary, // Color del tema
-                ),
+       return Drawer(
+  child: Container(
+     color: themeState.themeData.colorScheme.primaryContainer, 
+    child: ListView(
+      children: [
+        UserAccountsDrawerHeader(
+          accountName: Text("Valeria Ramirez"),
+          accountEmail: Text("valeria.ramirez@iteso.mx"),
+          currentAccountPicture: CircleAvatar(
+            child: ClipOval(
+              child: Image.network(
+                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80",
+                width: 90,
+                height: 90,
+                fit: BoxFit.cover,
               ),
-              ListTile(
-                leading: Icon(Icons.app_settings_alt),
-                title: Text("Configuracion"),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ));
-                },
-              ),
-              // Otras opciones del Drawer
-              ListTile(
-                leading: Icon(Icons.lightbulb_sharp),
-                title: Text("Modo Oscuro"),
-                trailing: Switch(
-                  value: isSwitched,
-                  onChanged: (value) {
-                    setState(() {
-                        isSwitched = !isSwitched;
-                        BlocProvider.of<ThemeBloc>(context).add(
-                          ThemeChangedEvent(
-                            theme: isSwitched ? AppTheme.DarkApp : AppTheme.LightApp,
-                          ),
-                        );
-                      });
-                  },
-                ),
-              ),
-              // Otras opciones del Drawer
-            ],
+            ),
           ),
-        );
+          decoration: BoxDecoration(
+            color: themeState.themeData.colorScheme.secondary, // Color del tema
+          ),
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.app_settings_alt,
+             color: themeState.themeData.colorScheme.onPrimaryContainer),
+          title: Text("Configuracion",
+          style:TextStyle(color: themeState.themeData.colorScheme.onPrimaryContainer)),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ProfileScreen(),
+            ));
+          },
+        ),
+        // Otras opciones del Drawer
+        ListTile(
+          leading: Icon(Icons.lightbulb_sharp,color: themeState.themeData.colorScheme.onPrimaryContainer),
+          title: Text("Modo Oscuro", 
+          style: TextStyle(color: themeState.themeData.colorScheme.onPrimaryContainer)),
+          trailing: Switch(
+            value: isSwitched,
+            onChanged: (value) {
+              setState(() {
+                isSwitched = !isSwitched;
+                BlocProvider.of<ThemeBloc>(context).add(
+                  ThemeChangedEvent(
+                    theme: isSwitched ? AppTheme.DarkApp : AppTheme.LightApp,
+                  ),
+                );
+              });
+            },
+          ),
+        ),
+        // Otras opciones del Drawer
+      ],
+    ),
+  ),
+);
+
       },
     );
   }

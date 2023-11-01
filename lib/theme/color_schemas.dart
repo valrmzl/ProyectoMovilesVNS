@@ -5,8 +5,8 @@ const LightColorScheme = ColorScheme(
   brightness: Brightness.light,
   primary: Color.fromARGB(255, 184, 243, 223),
   onPrimary: Color(0xFFFFFFFF),
-  primaryContainer: Color(0xFFEADDFF),
-  onPrimaryContainer: Color(0xFF21005D),
+  primaryContainer: Color.fromARGB(255, 255, 255, 255),
+  onPrimaryContainer: Color.fromARGB(255, 0, 0, 0),
   secondary: Color.fromARGB(
               255, 47, 125, 121),
   onSecondary: Color(0xFFFFFFFF),
@@ -19,18 +19,19 @@ const LightColorScheme = ColorScheme(
   background: Color(0xFFFFFBFE),
   onBackground: Color(0xFF1C1B1F),
   surface: Color(0xFFFFFBFE),
-  onSurface: Color(0xFF1C1B1F),
-  surfaceVariant: Color(0xFFE7E0EC),
+  onSurface: Color.fromARGB(255, 255, 255, 255),
+  surfaceVariant: Color.fromARGB(255, 255, 255, 255),
   shadow: Color(0xFF000000),
-  scrim: Color(0xFF000000),
+  scrim: Color.fromARGB(
+              255, 15, 182, 138),
 );
 
 const DarkColorScheme = ColorScheme(
   brightness: Brightness.dark,
   primary: Color(0xFF18453B), // Verde oscuro
   onPrimary: Color(0xFFFFFFFF), // Texto sobre el verde oscuro
-  primaryContainer: Color(0xFF235A4F), // Fondo para elementos principales
-  onPrimaryContainer: Color(0xFFEADDFF), // Texto sobre el fondo de elementos principales
+  primaryContainer: Color.fromARGB(255, 11, 47, 40), // Fondo para elementos principales
+  onPrimaryContainer: Color.fromARGB(255, 255, 255, 255), // Texto sobre el fondo de elementos principales
   secondary: Color(0xFF2F7D79), // Verde más claro
   onSecondary: Color(0xFFFFFFFF), // Texto sobre el verde claro
   onSecondaryContainer: Color(0xFF1D192B), // Texto sobre el fondo de elementos secundarios
@@ -42,8 +43,8 @@ const DarkColorScheme = ColorScheme(
   background: Color(0xFF1C1B1F), // Fondo de la aplicación
   onBackground: Color(0xFFE6E1E5), // Texto sobre el fondo de la aplicación
   surface: Color(0xFF1C1B1F), // Superficie
-  onSurface: Color(0xFFE6E1E5), // Texto sobre la superficie
-  surfaceVariant: Color(0xFF49454F), // Variante de la superficie
-  shadow: Color(0xFF000000), // Color de sombra
-  scrim: Color(0xFF000000), // Color de la pantalla de bloqueo
+  onSurface: Color(0xFF2F7D79), // Texto sobre la superficie
+  surfaceVariant: Color.fromARGB(255, 90, 95, 91), // Variante de la superficie
+  shadow: Color.fromARGB(255, 255, 255, 255), // Color de sombra
+  scrim: Color.fromARGB(255, 255, 255, 255), // Color de la pantalla de bloqueo
 );

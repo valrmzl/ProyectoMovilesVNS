@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/Screens/ahorro_item.dart';
 import 'package:proyecto_vsn/Screens/nueva_meta.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class Ahorro {
   final String nombre;
@@ -30,11 +32,13 @@ class Ahorros extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+     return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState){
+         return SingleChildScrollView(
       child: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 184, 243, 223),
+            color: themeState.themeData.colorScheme.primary,
             height: MediaQuery.of(context).size.height * 0.2,
             child: Column(children: [
               Row(
@@ -45,7 +49,7 @@ class Ahorros extends StatelessWidget {
                     child: Text(
                       'Tu ahorro',
                       style:
-                          TextStyle(fontSize: 15, color: Colors.grey.shade800),
+                          TextStyle(fontSize: 15, color: themeState.themeData.colorScheme.shadow,),
                     ),
                   ),
                   Padding(
@@ -66,7 +70,7 @@ class Ahorros extends StatelessWidget {
                 ],
               ),
               Text('Tu ahorro',
-                  style: TextStyle(fontSize: 17, color: Colors.grey.shade800)),
+                  style: TextStyle(fontSize: 17, color: themeState.themeData.colorScheme.shadow,)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -83,12 +87,12 @@ class Ahorros extends StatelessWidget {
                     padding: const EdgeInsets.only(bottom: 13),
                     child: Text('MXM',
                         style: TextStyle(
-                            fontSize: 17, color: Colors.grey.shade800)),
+                            fontSize: 17, color: themeState.themeData.colorScheme.shadow,)),
                   )
                 ],
               ),
               Text('Septiembre 2023',
-                  style: TextStyle(color: Colors.grey.shade800))
+                  style: TextStyle(color: themeState.themeData.colorScheme.shadow,))
             ]),
           ),
           AhorroItem(data: item),
@@ -100,5 +104,9 @@ class Ahorros extends StatelessWidget {
         ],
       ),
     );
+      },
+      
+     );
+   
   }
 }
