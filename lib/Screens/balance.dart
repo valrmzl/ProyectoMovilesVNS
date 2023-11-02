@@ -182,16 +182,7 @@ class _BalanceState extends State<Balance> {
                     left: MediaQuery.of(context).size.width * 0.85,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(7),
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        color: Color.fromARGB(255, 22, 165, 110),
-                        child: Icon(
-                          Icons.notification_add,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
+                      
                     )),
                 Padding(
                   padding: const EdgeInsets.only(top: 30, left: 10),
