@@ -41,7 +41,6 @@ class Ahorros extends StatefulWidget {
 }
 
 class _AhorrosState extends State<Ahorros> {
-  late Ahorro item;
   late List<Ahorro> items;
 
   Future<List<Ahorro>> loadJsonData() async {

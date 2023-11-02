@@ -1,0 +1,20 @@
+[
+    {
+        "titulo": "elotes",
+        "subtitulo1": "comida",
+        "fecha": "01/10/23",
+        "precio": 11023
+    },
+    {
+        "titulo": "elotes2",
+        "subtitulo1": "comida",
+        "fecha": "01/10/23",
+        "precio": 11023
+    },
+    {
+        "titulo": "dinero papa",
+        "subtitulo1": "tarjeta",
+        "fecha": "01/10/23",
+        "precio": 11023
+    }
+]
