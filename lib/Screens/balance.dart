@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/Screens/calendar.dart';
 import 'package:proyecto_vsn/Screens/gastos.dart';
 import 'package:proyecto_vsn/Screens/ingresos.dart';
 import 'package:proyecto_vsn/data/list_dummy.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class User {
@@ -164,15 +166,18 @@ class _BalanceState extends State<Balance> {
   }
 
   Widget _head(context) {
-    return Stack(
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState) {
+         return Stack(
       children: [
         Column(
           children: [
             Container(
+              
               width: MediaQuery.of(context).size.width * 1,
               height: 140,
               decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 184, 243, 223),
+                   color: themeState.themeData.colorScheme.primary,
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20))),
@@ -342,5 +347,9 @@ class _BalanceState extends State<Balance> {
         )
       ],
     );
+
+      }
+    );
+   
   }
 }
