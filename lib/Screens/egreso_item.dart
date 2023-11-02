@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class EgresoItem extends StatelessWidget {
   final String titulo;
@@ -15,7 +17,10 @@ class EgresoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState){
+        return Card(
+          color: themeState.themeData.colorScheme.surfaceVariant,
       margin: EdgeInsets.all(16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -66,6 +71,10 @@ class EgresoItem extends StatelessWidget {
         ),
       ),
     );
+
+      }
+    );
+    
   }
 
   Widget categoriaChip(String label, Color color) {

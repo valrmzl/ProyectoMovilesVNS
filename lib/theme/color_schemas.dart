@@ -19,7 +19,7 @@ const LightColorScheme = ColorScheme(
   background: Color(0xFFFFFBFE),
   onBackground: Color(0xFF1C1B1F),
   surface: Color(0xFFFFFBFE),
-  onSurface: Color.fromARGB(255, 255, 255, 255),
+  onSurface: Color.fromARGB(255, 246, 240, 240),
   surfaceVariant: Color.fromARGB(255, 255, 255, 255),
   shadow: Color(0xFF000000),
   scrim: Color.fromARGB(
@@ -31,7 +31,7 @@ const DarkColorScheme = ColorScheme(
   primary: Color(0xFF18453B), // Verde oscuro
   onPrimary: Color(0xFFFFFFFF), // Texto sobre el verde oscuro
   primaryContainer: Color.fromARGB(255, 11, 47, 40), // Fondo para elementos principales
-  onPrimaryContainer: Color.fromARGB(255, 255, 255, 255), // Texto sobre el fondo de elementos principales
+  onPrimaryContainer: Color.fromARGB(255, 47, 125, 121), // Texto sobre el fondo de elementos principales
   secondary: Color(0xFF2F7D79), // Verde más claro
   onSecondary: Color(0xFFFFFFFF), // Texto sobre el verde claro
   onSecondaryContainer: Color(0xFF1D192B), // Texto sobre el fondo de elementos secundarios
@@ -44,7 +44,7 @@ const DarkColorScheme = ColorScheme(
   onBackground: Color(0xFFE6E1E5), // Texto sobre el fondo de la aplicación
   surface: Color(0xFF1C1B1F), // Superficie
   onSurface: Color(0xFF2F7D79), // Texto sobre la superficie
-  surfaceVariant: Color.fromARGB(255, 90, 95, 91), // Variante de la superficie
+  surfaceVariant: Color.fromARGB(255, 198, 199, 198), // Variante de la superficie
   shadow: Color.fromARGB(255, 255, 255, 255), // Color de sombra
   scrim: Color.fromARGB(255, 255, 255, 255), // Color de la pantalla de bloqueo
 );

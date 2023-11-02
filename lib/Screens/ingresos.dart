@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/Screens/ingreso_item.dart';
 // ignore: unused_import
 import 'package:proyecto_vsn/Screens/nuevo_ingreso.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 
 
@@ -15,7 +17,9 @@ class Ingresos extends StatefulWidget {
 class _IngresosState extends State<Ingresos> {
   @override
   Widget build(BuildContext context) {
-    List<String> categorias = [
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState){
+        List<String> categorias = [
       'Salario',
       'Aguinaldo',
       'Bonos',
@@ -26,7 +30,7 @@ class _IngresosState extends State<Ingresos> {
       child: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 184, 243, 223),
+            color: themeState.themeData.colorScheme.primary,
             height: MediaQuery.of(context).size.height * 0.2,
             child: Column(children: [
               Row(
@@ -37,7 +41,7 @@ class _IngresosState extends State<Ingresos> {
                     child: Text(
                       'Tus ingresos',
                       style:
-                          TextStyle(fontSize: 15, color: Colors.grey.shade800),
+                          TextStyle(fontSize: 15, color: themeState.themeData.colorScheme.shadow),
                     ),
                   ),
                   Padding(
@@ -49,13 +53,13 @@ class _IngresosState extends State<Ingresos> {
                       },
                       child: Text('+ Nuevo ingreso',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
+                              fontSize: 15, fontWeight: FontWeight.bold, color: themeState.themeData.colorScheme.shadow)),
                     ),
                   )
                 ],
               ),
               Text('Tus ingresos',
-                  style: TextStyle(fontSize: 17, color: Colors.grey.shade800)),
+                  style: TextStyle(fontSize: 17, color: themeState.themeData.colorScheme.shadow)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -65,22 +69,23 @@ class _IngresosState extends State<Ingresos> {
                     child: Text(
                       r"$0.03",
                       style:
-                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: themeState.themeData.colorScheme.shadow),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 13),
                     child: Text('MXM',
                         style: TextStyle(
-                            fontSize: 17, color: Colors.grey.shade800)),
+                            fontSize: 17,color: themeState.themeData.colorScheme.shadow)),
                   )
                 ],
               ),
               Text('Septiembre 2023',
-                  style: TextStyle(color: Colors.grey.shade800))
+                  style: TextStyle(color: themeState.themeData.colorScheme.shadow))
             ]),
           ),
           Container(
+            color: themeState.themeData.colorScheme.onSurfaceVariant,
   height: MediaQuery.of(context).size.height * 1,
   child: ListView.separated(
     itemCount: categorias.length,
@@ -97,15 +102,14 @@ class _IngresosState extends State<Ingresos> {
     },
   ),
 )
-
-
-            
-            
-          
           
         ],
       ),
     );
+
+      }
+    );
+    
   }
 }
 

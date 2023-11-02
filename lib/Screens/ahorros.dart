@@ -80,7 +80,7 @@ class Ahorros extends StatelessWidget {
                     child: Text(
                       r"$0.03",
                       style:
-                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold ,color: themeState.themeData.colorScheme.shadow ),
                     ),
                   ),
                   Padding(

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/Screens/egreso_item.dart';
 import 'package:proyecto_vsn/Screens/ingreso_item.dart';
 // ignore: unused_import
 import 'package:proyecto_vsn/Screens/nuevo_egreso.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 
 
@@ -16,7 +18,9 @@ class Egresos extends StatefulWidget {
 class _EgresosState extends State<Egresos> {
   @override
   Widget build(BuildContext context) {
-    List<String> categorias = [
+    return BlocBuilder<ThemeBloc, ThemeState>(
+       builder: (context, themeState){
+            List<String> categorias = [
       'Salario',
       'Aguinaldo',
       'Bonos',
@@ -27,7 +31,7 @@ class _EgresosState extends State<Egresos> {
       child: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 184, 243, 223),
+            color: themeState.themeData.colorScheme.primary,
             height: MediaQuery.of(context).size.height * 0.2,
             child: Column(children: [
               Row(
@@ -38,7 +42,7 @@ class _EgresosState extends State<Egresos> {
                     child: Text(
                       'Tus Egresos',
                       style:
-                          TextStyle(fontSize: 15, color: Colors.grey.shade800),
+                          TextStyle(fontSize: 15,  color: themeState.themeData.colorScheme.shadow),
                     ),
                   ),
                   Padding(
@@ -56,7 +60,7 @@ class _EgresosState extends State<Egresos> {
                 ],
               ),
               Text('Tus Egresos',
-                  style: TextStyle(fontSize: 17, color: Colors.grey.shade800)),
+                  style: TextStyle(fontSize: 17,  color: themeState.themeData.colorScheme.shadow)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -66,35 +70,36 @@ class _EgresosState extends State<Egresos> {
                     child: Text(
                       r"$0.03",
                       style:
-                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.bold,  color: themeState.themeData.colorScheme.shadow),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 13),
                     child: Text('MXM',
                         style: TextStyle(
-                            fontSize: 17, color: Colors.grey.shade800)),
+                            fontSize: 17,  color: themeState.themeData.colorScheme.shadow)),
                   )
                 ],
               ),
               Text('Septiembre 2023',
-                  style: TextStyle(color: Colors.grey.shade800))
+                  style: TextStyle(  color: themeState.themeData.colorScheme.shadow))
             ]),
           ),
           Container(
-  height: MediaQuery.of(context).size.height * 1,
-  child: ListView.separated(
-    itemCount: categorias.length+8,
-    separatorBuilder: (context, index) {
-      return Divider();
-    },
-    itemBuilder: (context, index) {
-      return EgresoItem(
-        titulo: "elotes",
-        subtitulo1: "comida",
-        fecha: "01/10/23",// Reemplaza con el valor correcto
-        precio: 011023, // Reemplaza con el valor correcto
-      );
+        height: MediaQuery.of(context).size.height * 1,
+         color: themeState.themeData.colorScheme.onSurfaceVariant,
+        child: ListView.separated(
+          itemCount: categorias.length+8,
+          separatorBuilder: (context, index) {
+            return Divider();
+          },
+          itemBuilder: (context, index) {
+            return EgresoItem(
+              titulo: "elotes",
+              subtitulo1: "comida",
+              fecha: "01/10/23",// Reemplaza con el valor correcto
+              precio: 011023, // Reemplaza con el valor correcto
+            );
     },
   ),
 )
@@ -107,6 +112,10 @@ class _EgresosState extends State<Egresos> {
         ],
       ),
     );
+
+       }
+    );
+
   }
 }
 
