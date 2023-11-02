@@ -1,8 +1,36 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:proyecto_vsn/Screens/calendar.dart';
+import 'package:proyecto_vsn/Screens/gastos.dart';
+import 'package:proyecto_vsn/Screens/ingresos.dart';
 import 'package:proyecto_vsn/data/list_dummy.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+class User {
+  final String username;
+  final String name;
+  final String email;
+  final String number;
+
+  User({
+    required this.username,
+    required this.name,
+    required this.email,
+    required this.number,
+  });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      username: json['username'] as String,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      number: json['number'] as String,
+    );
+  }
+}
 
 class Balance extends StatefulWidget {
   const Balance({Key? key}) : super(key: key);
@@ -13,6 +41,66 @@ class Balance extends StatefulWidget {
 
 class _BalanceState extends State<Balance> {
   DateTime? selectedDay;
+  late List<Ingreso> ingresos;
+  late List<Egreso> egresos;
+  late User user;
+
+  double total = 0;
+  double total_ingresos = 0;
+  double total_egresos = 0;
+
+  Future<List<Ingreso>> loadJsonDataIngreso() async {
+    final jsonString = await rootBundle.loadString('lib/data/ingreso.json');
+    final jsonData = json.decode(jsonString);
+    List<Ingreso> lista = [];
+    for (int i = 0; i < jsonData.length; i++) {
+      lista.add(Ingreso.fromJson(jsonData[i]));
+    }
+    return lista;
+  }
+
+  Future<List<Egreso>> loadJsonDataEgreso() async {
+    final jsonString = await rootBundle.loadString('lib/data/egreso.json');
+    final jsonData = json.decode(jsonString);
+    List<Egreso> lista = [];
+    for (int i = 0; i < jsonData.length; i++) {
+      lista.add(Egreso.fromJson(jsonData[i]));
+    }
+    return lista;
+  }
+
+  Future<User> loadJsonDataUser() async {
+    final jsonString = await rootBundle.loadString('lib/data/user.json');
+    final jsonData = json.decode(jsonString);
+    var lista = User.fromJson(jsonData);
+    return lista;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadJsonDataUser().then(
+      (value) {
+        user = value;
+        loadJsonDataIngreso().then((loadedDataIngreso) {
+          setState(() {
+            ingresos = loadedDataIngreso;
+            total_ingresos =
+                ingresos.map((item) => item.precio).reduce((a, b) => a + b);
+            loadJsonDataEgreso().then((loadedDataEgreso) {
+              setState(() {
+                egresos = loadedDataEgreso;
+                total_egresos =
+                    egresos.map((item) => item.precio).reduce((a, b) => a + b);
+                total = total_ingresos - total_egresos;
+              });
+            });
+          });
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,23 +108,15 @@ class _BalanceState extends State<Balance> {
           child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(
-              height: 280, child: _head(context)
-              ),
+            child: SizedBox(height: 280, child: _head(context)),
           ),
-          SliverToBoxAdapter(
-            child: Calendar()
-          ),
-          
-         
-          
+          SliverToBoxAdapter(child: Calendar()),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    
                     Text("Historial de transacciones",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -47,20 +127,16 @@ class _BalanceState extends State<Balance> {
                             fontWeight: FontWeight.w600,
                             fontSize: 15,
                             color: Colors.grey)),
-                            
-                      
                   ]),
             ),
           ),
-
-              
-          SliverList(delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              return ListTile(
+          SliverList(
+              delegate: SliverChildBuilderDelegate((context, index) {
+            return ListTile(
                 leading: ClipRRect(
                     borderRadius: BorderRadius.circular(5),
                     child: Icon(
-                       geter()[index].icono,
+                      geter()[index].icono,
                       size: 30,
                       color: Colors.black,
                     )),
@@ -76,14 +152,12 @@ class _BalanceState extends State<Balance> {
                 trailing: Text(
                   geter()[index].fee!,
                   style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 19,
-                      color: geter()[index].tipo!? Colors.green: Colors.red,
-                ),
-              ));
-            },
-            childCount: geter().length
-          ))
+                    fontWeight: FontWeight.w600,
+                    fontSize: 19,
+                    color: geter()[index].tipo! ? Colors.green : Colors.red,
+                  ),
+                ));
+          }, childCount: geter().length))
         ],
       )),
     );
@@ -129,7 +203,7 @@ class _BalanceState extends State<Balance> {
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
                               color: Colors.black)),
-                      Text("Valeria Ramirez",
+                      Text("${user.name}",
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
@@ -188,7 +262,7 @@ class _BalanceState extends State<Balance> {
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Row(
                   children: [
-                    Text('\$ 1,400',
+                    Text('\$$total',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 25,
@@ -259,24 +333,21 @@ class _BalanceState extends State<Balance> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('\$ 1,400',
+                    Text('\$$total_ingresos',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 17,
                             color: Colors.white)),
-                    Text('\$ 1,400',
+                    Text('\$$total_egresos',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 17,
                             color: Colors.white)),
-                          
                   ],
                 ),
-                
               )
             ]),
           ),
-          
         )
       ],
     );
