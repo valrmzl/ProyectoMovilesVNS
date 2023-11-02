@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/Screens/ingreso_item.dart';
-// ignore: unused_import
 import 'package:proyecto_vsn/Screens/nuevo_ingreso.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
