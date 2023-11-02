@@ -61,7 +61,7 @@ class IngresoItem extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 10.0),
                       ),
                       Text("\$$precio",
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextStyle(fontWeight: FontWeight.bold,)),
                     ],
                   )
                 ],

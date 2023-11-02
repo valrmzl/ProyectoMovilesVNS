@@ -95,13 +95,20 @@ class Ahorros extends StatelessWidget {
                   style: TextStyle(color: themeState.themeData.colorScheme.shadow,))
             ]),
           ),
+          Container(
+            color: themeState.themeData.colorScheme.onSurfaceVariant,
+            child: Column(children: [
+              AhorroItem(data: item),
+              AhorroItem(data: item),
+              AhorroItem(data: item),
+              AhorroItem(data: item),
+              AhorroItem(data: item),
+              AhorroItem(data: item),
+              AhorroItem(data: item),
+            ]),
+          ),
          
-          AhorroItem(data: item),
-          AhorroItem(data: item),
-          AhorroItem(data: item),
-          AhorroItem(data: item),
-          AhorroItem(data: item),
-          AhorroItem(data: item),
+          
         ],
       ),
     );

@@ -144,7 +144,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                           Navigator.pop(context);
                           
                         },
-                        color: themeState.themeData.colorScheme.onPrimaryContainer,
+                        color: themeState.themeData.colorScheme.secondary,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),

@@ -65,7 +65,8 @@ class _AhorroItemState extends State<AhorroItem> {
                           child: Text(widget.data.origen),
                         ),
                         Text(
-                            '${widget.data.fecha.day} ${monthsOfYear[widget.data.fecha.month]} ${widget.data.fecha.year}')
+                            '${widget.data.fecha.day} ${monthsOfYear[widget.data.fecha.month]} ${widget.data.fecha.year}',
+                            style: TextStyle(color: Colors.black),)
                       ],
                     ),
                     Padding(
@@ -89,11 +90,11 @@ class _AhorroItemState extends State<AhorroItem> {
                           padding: const EdgeInsets.only(top: 10.0),
                           child: Text(
                             "\$${widget.data.progreso}",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black ),
                           ),
                         ),
                         Text("\$${widget.data.meta}",
-                            style: TextStyle(fontWeight: FontWeight.bold))
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black))
                       ],
                     )
                   ],
