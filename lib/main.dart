@@ -7,7 +7,6 @@ import 'package:proyecto_vsn/Screens/welcome.dart';
 import 'package:proyecto_vsn/Screens/calendar.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
-
 void main() {
   // BLoC provider con socope para poder cambiar themes en toda la app
   runApp(BlocProvider(
@@ -15,7 +14,6 @@ void main() {
     child: MyApp(),
   ));
 }
-
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
