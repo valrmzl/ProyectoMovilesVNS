@@ -163,7 +163,10 @@ class _AhorrosState extends State<Ahorros> {
                               child: Text(
                                 "\$${total.toString()}",
                                 style: TextStyle(
-                                    fontSize: 35, fontWeight: FontWeight.bold),
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.bold,
+                                    color: themeState
+                                        .themeData.colorScheme.shadow),
                               ),
                             ),
                             Padding(

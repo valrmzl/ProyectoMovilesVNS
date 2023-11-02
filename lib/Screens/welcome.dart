@@ -11,31 +11,33 @@ class Welcome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children:<Widget>[
-              Column(
-                children: <Widget>[
-                  Text("Bienvenido",
-                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30
-                   ),),
-                   SizedBox(height: 20,),
-                   Text("Texto que aun no se",
-                   textAlign: TextAlign.center,
-                   style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 15
-                   ),),
-                   
-                ],
-              ),
+          child: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(
+                  "Bienvenido",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Colors.black),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "La mejor app de finanzas",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey[700], fontSize: 15),
+                ),
+              ],
+            ),
 
             Container(
               height: MediaQuery.of(context).size.height / 3,

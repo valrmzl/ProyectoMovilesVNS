@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -7,7 +8,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   // Lista de países para el Dropdown
-  List<String> countries = ["México", "Estados Unidos", "Canadá", "España", "Argentina"];
+  List<String> countries = [
+    "México",
+    "Estados Unidos",
+    "Canadá",
+    "España",
+    "Argentina"
+  ];
 
   // Variable para controlar el valor seleccionado del Dropdown
   String selectedCountry = "México";
@@ -49,24 +56,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         shape: BoxShape.circle,
                         color: Colors.white,
                       ),
-                      child: Icon(
-                        Icons.camera_alt,
-                        size: 20,
-                        color: Color.fromARGB(255, 47, 125, 121),
-                      ),
+                      child: IconButton(
+                          onPressed: () async {
+                            // Solicitar permisos de cámara y galería
+                            var cameraStatus =
+                                await Permission.camera.request();
+                            var photosStatus =
+                                await Permission.photos.request();
+
+                            if (cameraStatus.isGranted &&
+                                photosStatus.isGranted) {
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Debes conceder los permisos de cámara y galería para continuar.'),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icon(
+                            Icons.camera_alt,
+                            size: 20,
+                            color: Color.fromARGB(255, 47, 125, 121),
+                          )),
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 40), 
-          _buildInfoCard(Icons.person, "Valeria Ramirez", Color.fromARGB(255, 47, 125, 121)),
-          const SizedBox(height: 16), 
-          _buildInfoCard(Icons.email, "val@gmail.com", Color.fromARGB(255, 47, 125, 121)),
-          const SizedBox(height: 16), 
-          _buildInfoCard(Icons.phone, "3312143523", Color.fromARGB(255, 47, 125, 121)),
-          const SizedBox(height: 16), 
+          const SizedBox(height: 40),
+          _buildInfoCard(Icons.person, "Valeria Ramirez",
+              Color.fromARGB(255, 47, 125, 121)),
+          const SizedBox(height: 16),
+          _buildInfoCard(
+              Icons.email, "val@gmail.com", Color.fromARGB(255, 47, 125, 121)),
+          const SizedBox(height: 16),
+          _buildInfoCard(
+              Icons.phone, "3312143523", Color.fromARGB(255, 47, 125, 121)),
+          const SizedBox(height: 16),
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
@@ -95,26 +124,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }).toList(),
               ),
             ),
-            ),
-
+          ),
         ],
       ),
     );
   }
 
-Card _buildInfoCard(IconData icon, String text, Color iconColor) {
-  return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    elevation: 4,
-    child: ListTile(
-      leading: Icon(
-        icon,
-        color: iconColor,
+  Card _buildInfoCard(IconData icon, String text, Color iconColor) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
-      title: Text(text),
-    ),
-  );
-}
+      elevation: 4,
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: iconColor,
+        ),
+        title: Text(text),
+      ),
+    );
+  }
 }

@@ -3,7 +3,6 @@ import 'package:proyecto_vsn/Screens/create_account.dart';
 import 'package:proyecto_vsn/Screens/home_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -44,8 +43,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       Text(
                         "Inicia sesión en tu cuenta",
-                        style: TextStyle(
-                            fontSize: 15, color: Colors.grey[700]),
+                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                       ),
                     ],
                   ),
@@ -73,25 +71,13 @@ class LoginPage extends StatelessWidget {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () async {
-                          // Solicitar permisos de cámara y galería
-                          var cameraStatus = await Permission.camera.request();
-                          var photosStatus = await Permission.photos.request();
-
-                          if (cameraStatus.isGranted && photosStatus.isGranted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage(),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Debes conceder los permisos de cámara y galería para continuar.'),
-                              ),
-                            );
-                          }
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                          );
                         },
                         color: Color.fromARGB(255, 184, 243, 223),
                         elevation: 0,
@@ -162,12 +148,11 @@ class LoginPage extends StatelessWidget {
         TextField(
           obscureText: obscureText,
           decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
         ),
         SizedBox(
