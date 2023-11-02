@@ -186,6 +186,7 @@ class _IngresosState extends State<Ingresos> {
                     ]),
                   ),
                   ListView.builder(
+                  
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: items.length,
