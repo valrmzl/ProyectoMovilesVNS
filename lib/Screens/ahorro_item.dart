@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/Screens/ahorro_detalle.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 import 'ahorros.dart';
 
@@ -30,14 +32,18 @@ class _AhorroItemState extends State<AhorroItem> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState){
+        return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => AhorroDetalle(data: widget.data)));
       },
+      
       child: Card(
+        color: themeState.themeData.colorScheme.surfaceVariant,
         margin: EdgeInsets.all(16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
@@ -98,5 +104,9 @@ class _AhorroItemState extends State<AhorroItem> {
         ),
       ),
     );
+
+      }
+    );
+    
   }
 }

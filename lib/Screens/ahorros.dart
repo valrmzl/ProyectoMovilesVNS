@@ -95,6 +95,7 @@ class Ahorros extends StatelessWidget {
                   style: TextStyle(color: themeState.themeData.colorScheme.shadow,))
             ]),
           ),
+         
           AhorroItem(data: item),
           AhorroItem(data: item),
           AhorroItem(data: item),

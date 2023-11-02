@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class NuevoIngreso extends StatefulWidget {
   const NuevoIngreso({Key? key});
@@ -46,7 +48,9 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     List<String> recibido = ['Efectivo', 'Deposito/Transferencia'];
     String recibidoSeleccionado = 'Efectivo';
 
-    return Scaffold(
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState){
+        return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -130,14 +134,15 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        color: Color.fromARGB(255, 184, 243, 223),
+                         color: themeState.themeData.colorScheme.onPrimaryContainer,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
                         child: Text(
                           "Agregar ingreso",
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                              fontWeight: FontWeight.w600, fontSize: 18,
+                              color: themeState.themeData.colorScheme.shadow,),
                         ),
                       ),
                     ),
@@ -149,6 +154,11 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
         ),
       ),
     );
+
+      }
+    );
+
+    
   }
 
   Widget makeInput(

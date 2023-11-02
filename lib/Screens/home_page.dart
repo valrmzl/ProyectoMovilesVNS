@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.savings), label: 'Ahorros'),
           ],
-          selectedItemColor:themeState.themeData.colorScheme.scrim, // Color de los íconos seleccionados
+          selectedItemColor:Color.fromARGB(
+              255, 15, 182, 138), // Color de los íconos seleccionados
           unselectedItemColor:
               Colors.grey, // Color de los íconos no seleccionados
         ),

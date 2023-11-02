@@ -53,7 +53,7 @@ class _IngresosState extends State<Ingresos> {
                       },
                       child: Text('+ Nuevo ingreso',
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold, color: themeState.themeData.colorScheme.shadow)),
+                              fontSize: 15, fontWeight: FontWeight.bold,)),
                     ),
                   )
                 ],

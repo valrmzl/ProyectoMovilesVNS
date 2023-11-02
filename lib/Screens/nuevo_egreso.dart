@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class NuevoEgreso extends StatefulWidget {
   const NuevoEgreso({Key? key});
@@ -55,7 +57,9 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
     List<String> recibido = ['Efectivo', 'Crédito', 'Débito'];
     String recibidoSeleccionado = 'Efectivo';
 
-    return Scaffold(
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, themeState){
+         return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -140,7 +144,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                           Navigator.pop(context);
                           
                         },
-                        color: Colors.greenAccent,
+                        color: themeState.themeData.colorScheme.onPrimaryContainer,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
@@ -162,6 +166,11 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
         ),
       ),
     );
+
+      }
+    );
+
+   
   }
 
   Widget makeInput(
