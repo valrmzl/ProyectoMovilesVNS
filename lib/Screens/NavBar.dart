@@ -75,6 +75,19 @@ class _NavBarState extends State<NavBar> {
             },
           ),
         ),
+        ListTile(
+          leading: Icon(
+            Icons.logout,
+             color: themeState.themeData.colorScheme.onPrimaryContainer),
+          title: Text("Cerrar Sesión",
+          style:TextStyle(color: themeState.themeData.colorScheme.onPrimaryContainer)),
+          onTap: () {
+            
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ));
+          },
+        ),
         // Otras opciones del Drawer
       ],
     ),
