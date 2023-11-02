@@ -38,6 +38,7 @@ class Ingresos extends StatefulWidget {
 
 class _IngresosState extends State<Ingresos> {
   late List<Ingreso> items;
+  double total = 0;
 
   Future<List<Ingreso>> loadJsonData() async {
     final jsonString = await rootBundle.loadString('lib/data/ingreso.json');
@@ -49,12 +50,44 @@ class _IngresosState extends State<Ingresos> {
     return lista;
   }
 
+  String getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return "January";
+      case 2:
+        return "February";
+      case 3:
+        return "March";
+      case 4:
+        return "April";
+      case 5:
+        return "May";
+      case 6:
+        return "June";
+      case 7:
+        return "July";
+      case 8:
+        return "August";
+      case 9:
+        return "September";
+      case 10:
+        return "October";
+      case 11:
+        return "November";
+      case 12:
+        return "December";
+      default:
+        return "Invalid Month";
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     loadJsonData().then((loadedData) {
       setState(() {
         items = loadedData;
+        total = items.map((item) => item.precio).reduce((a, b) => a + b);
       });
     });
   }
@@ -128,7 +161,7 @@ class _IngresosState extends State<Ingresos> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              r"$0.03",
+                              "\$${total.toString()}",
                               style: TextStyle(
                                   fontSize: 35,
                                   fontWeight: FontWeight.bold,
@@ -146,31 +179,27 @@ class _IngresosState extends State<Ingresos> {
                           )
                         ],
                       ),
-                      Text('Septiembre 2023',
+                      Text(
+                          '${getMonthName(DateTime.now().month)} ${DateTime.now().year}',
                           style: TextStyle(
                               color: themeState.themeData.colorScheme.shadow))
                     ]),
                   ),
-                  Container(
-                    color: themeState.themeData.colorScheme.onSurfaceVariant,
-                    height: MediaQuery.of(context).size.height * 1,
-                    child: ListView.separated(
-                      itemCount: items.length,
-                      separatorBuilder: (context, index) {
-                        return Divider();
-                      },
-                      itemBuilder: (context, index) {
-                        return IngresoItem(
-                          titulo: items[index].titulo,
-                          subtitulo1: items[index].subtitulo1,
-                          fecha: items[index]
-                              .fecha, // Reemplaza con el valor correcto
-                          precio: items[index]
-                              .precio, // Reemplaza con el valor correcto
-                        );
-                      },
-                    ),
-                  )
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return IngresoItem(
+                        titulo: items[index].titulo,
+                        subtitulo1: items[index].subtitulo1,
+                        fecha: items[index]
+                            .fecha, // Reemplaza con el valor correcto
+                        precio: items[index]
+                            .precio, // Reemplaza con el valor correcto
+                      );
+                    },
+                  ),
                 ],
               ),
             );

@@ -42,6 +42,7 @@ class Ahorros extends StatefulWidget {
 
 class _AhorrosState extends State<Ahorros> {
   late List<Ahorro> items;
+  double total = 0;
 
   Future<List<Ahorro>> loadJsonData() async {
     final jsonString = await rootBundle.loadString('lib/data/ahorro.json');
@@ -59,8 +60,40 @@ class _AhorrosState extends State<Ahorros> {
     loadJsonData().then((loadedData) {
       setState(() {
         items = loadedData;
+        total = items.map((item) => item.progreso).reduce((a, b) => a + b);
       });
     });
+  }
+
+  String getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return "January";
+      case 2:
+        return "February";
+      case 3:
+        return "March";
+      case 4:
+        return "April";
+      case 5:
+        return "May";
+      case 6:
+        return "June";
+      case 7:
+        return "July";
+      case 8:
+        return "August";
+      case 9:
+        return "September";
+      case 10:
+        return "October";
+      case 11:
+        return "November";
+      case 12:
+        return "December";
+      default:
+        return "Invalid Month";
+    }
   }
 
   @override
@@ -128,7 +161,7 @@ class _AhorrosState extends State<Ahorros> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                r"$0.03",
+                                "\$${total.toString()}",
                                 style: TextStyle(
                                     fontSize: 35, fontWeight: FontWeight.bold),
                               ),
@@ -144,7 +177,8 @@ class _AhorrosState extends State<Ahorros> {
                             )
                           ],
                         ),
-                        Text('Septiembre 2023',
+                        Text(
+                            '${getMonthName(DateTime.now().month)} ${DateTime.now().year}',
                             style: TextStyle(
                               color: themeState.themeData.colorScheme.shadow,
                             ))
