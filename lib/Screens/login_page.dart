@@ -86,6 +86,11 @@ class LoginPage extends StatelessWidget {
                               ),
                             );
                           } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Debes conceder los permisos de cámara y galería para continuar.'),
+                              ),
+                            );
                           }
                         },
                         color: Color.fromARGB(255, 184, 243, 223),
