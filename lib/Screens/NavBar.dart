@@ -10,7 +10,7 @@ import 'package:proyecto_vsn/Screens/profile.dart';
 import 'package:proyecto_vsn/Screens/welcome.dart';
 import 'package:proyecto_vsn/theme/app_themes.dart';
 import '../theme/bloc/theme_bloc.dart';
-import 'balance.dart';
+import 'balance.dart'; 
 
 class NavBar extends StatefulWidget {
   const NavBar({Key? key}) : super(key: key);
@@ -21,8 +21,13 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
 
-  void signUserOut(){
+  void signUserOut(BuildContext context){
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ));
+
+    print("Log-out");
   }
 
   bool isSwitched = false;
@@ -120,9 +125,7 @@ class _NavBarState extends State<NavBar> {
                           color: themeState
                               .themeData.colorScheme.onPrimaryContainer)),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ));
+                    signUserOut(context);
                   },
                 ),
                 // Otras opciones del Drawer

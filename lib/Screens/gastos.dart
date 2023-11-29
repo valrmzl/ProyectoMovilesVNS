@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +14,7 @@ class Egreso {
   final String Categoria;
   final String Fecha;
   final String Frecuencia;
-  final int IdUsuario;
+  final String IdUsuario;
   final String MedioPago;
   final double Monto;
   final String Nombre;
@@ -36,7 +37,7 @@ factory Egreso.fromSnapshot(DocumentSnapshot snapshot) {
       Categoria: data['Categoria'] ?? '',
       Fecha: data['Fecha'].toDate().toString() ?? '',
       Frecuencia: data['Frecuencia'] ?? '',
-      IdUsuario: data['IdUsuario'].toInt() ?? '',
+      IdUsuario: data['IdUsuario'].toString() ?? '',
       MedioPago: data['MedioPago'] ?? '',
       Monto: (data['Monto'] ?? 0.0).toDouble(),
       Nombre: data['Nombre'] ?? '',
@@ -48,7 +49,7 @@ factory Egreso.fromSnapshot(DocumentSnapshot snapshot) {
       Categoria: 'Error',
       Fecha: '',
       Frecuencia: '',
-      IdUsuario: 1,
+      IdUsuario: "1",
       MedioPago: '',
       Monto: 0.0,
       Nombre: '',
@@ -71,15 +72,31 @@ class _EgresosState extends State<Egresos> {
 
 
 
-  Future<List<Egreso>> loadFirestoreData() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('Egresos').get();
+Future<List<Egreso>> loadFirestoreData() async {
+  // Obtener el usuario actualmente autenticado
+  User? user = FirebaseAuth.instance.currentUser;
+
+  if (user == null) {
+    // El usuario no está autenticado, manejar según tus necesidades
+    return [];
+  }
+
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Egresos')
+        .where('IdUsuario', isEqualTo: user.uid)  // Filtrar por userId
+        .get();
+
     List<Egreso> lista = querySnapshot.docs
         .map((DocumentSnapshot document) => Egreso.fromSnapshot(document))
         .toList();
 
     return lista;
+  } catch (e) {
+    print('Error loading data from Firebase: $e');
+    return []; // o manejar el error según tus necesidades
   }
+}
 
     String formatDate(Timestamp timestamp) {
     // Formatear el Timestamp a un formato más legible

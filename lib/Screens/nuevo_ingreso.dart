@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
@@ -35,25 +36,26 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     void _guardarIngresoFireBase() async {
     try {
       CollectionReference testCollection = FirebaseFirestore.instance.collection("Ingresos");
-
+      User? user = FirebaseAuth.instance.currentUser;
       DateTime now = DateTime.now();
       // Convierte el valor del campo 'Monto' a un entero
     int monto = int.tryParse(montoIngreso.text) ?? 0;
 
-
+    if (user != null) {
 
       Map<String, dynamic> data = {
         'Monto': monto,
         'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null,
         'Nombre': nombre.text,
         'Frecuencia': frecuenciaSeleccionada,
-        'IdUsuario': 1,
+        'IdUsuario': user.uid,
         "Categoria": categoriaSeleccionada,
         'TipoIngreso': tipoIngreso
       };
 
       await testCollection.add(data);
       print("Egreso agregado exitosamente");
+    }  
     } catch (e) {
       print("Error al agregar el egreso: $e");
     }

@@ -5,6 +5,7 @@ import 'package:proyecto_vsn/firebase_options.dart';
 
 //instalamos la coleccion a firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NuevoEgreso extends StatefulWidget {
   const NuevoEgreso({Key? key});
@@ -35,29 +36,37 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
       });
     }
   }
-
+ 
   void _guardarEgresoFireBase() async {
     try {
-      CollectionReference testCollection = FirebaseFirestore.instance.collection("Egresos");
+      // Obtener el usuario actualmente autenticado
+      User? user = FirebaseAuth.instance.currentUser;
+ 
 
-      DateTime now = DateTime.now();
-      // Convierte el valor del campo 'Monto' a un entero
-    int monto = int.tryParse(montoEgreso.text) ?? 0;
+      if (user != null) {
+        // Usuario autenticado
 
+        CollectionReference egresosCollection = FirebaseFirestore.instance.collection("Egresos");
 
+        DateTime now = DateTime.now();
+        int monto = int.tryParse(montoEgreso.text) ?? 0;
 
-      Map<String, dynamic> data = {
-        'Categoria': categoriaSeleccionada,
-        'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null,
-        'Frecuencia': frecuenciaSeleccionada,
-        'IdUsuario': 1,
-        'MedioPago': recibidoSeleccionado,
-        'Monto': monto,
-        'Nombre': nombre.text,
-      };
+        Map<String, dynamic> data = {
+          'Categoria': categoriaSeleccionada,
+          'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null,
+          'Frecuencia': frecuenciaSeleccionada,
+          'IdUsuario': user.uid,  // Usar el UID del usuario autenticado
+          'MedioPago': recibidoSeleccionado,
+          'Monto': monto,
+          'Nombre': nombre.text,
+        };
 
-      await testCollection.add(data);
-      print("Egreso agregado exitosamente");
+        await egresosCollection.add(data);
+        print("Egreso agregado exitosamente");
+      } else {
+        // Usuario no autenticado
+        print("Error: Usuario no autenticado al intentar agregar el egreso");
+      }
     } catch (e) {
       print("Error al agregar el egreso: $e");
     }
@@ -130,13 +139,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                           children: <Widget>[
                             makeInput(label: "¿Cuál es el monto de tu gasto? ", controller: montoEgreso),
                             makeInput(label: "¿Qué nombre le quieres dar? ", controller: nombre),
-                            
-
-                            
-                          
-                            
                             makeDropdown(label: "¿Con que medio hiciste este pago?", options: recibido, selectedValue: recibidoSeleccionado),
-                            
                             makeDropdown(label: "Categoría de tu gasto", options: categorias, selectedValue: categoriaSeleccionada),
                             makeDropdown(label: "¿Cada cuanto te llega este ingreso?", options: frecuencia, selectedValue: frecuenciaSeleccionada),
                             TextFormField(
@@ -232,7 +235,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
     );
   }
 
-Widget makeDropdown({String? label, List<String> options = const [], String? selectedValue}) {
+  Widget makeDropdown({String? label, List<String> options = const [], String? selectedValue}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -274,5 +277,4 @@ Widget makeDropdown({String? label, List<String> options = const [], String? sel
       ],
     );
   }
-
 }
