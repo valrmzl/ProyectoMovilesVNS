@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +13,7 @@ class Ingreso {
   final String Categoria;
   final String Fecha;
   final String Frecuencia;
-  final int IdUsuario;
+  final String IdUsuario;
   final double Monto;
   final String Nombre;
   final String TipoIngrso;
@@ -36,7 +37,7 @@ factory Ingreso.fromSnapshot(DocumentSnapshot snapshot) {
       Categoria: data['Categoria'] ?? '',
       Fecha: data['Fecha'].toDate().toString() ?? '',
       Frecuencia: data['Frecuencia'] ?? '',
-      IdUsuario: data['IdUsuario'].toInt() ?? '',
+      IdUsuario: data['IdUsuario'].toString() ?? '',
       Monto: (data['Monto'] ?? 0.0).toDouble(),
       Nombre: data['Nombre'] ?? '',
       TipoIngrso: data['TipoIngreso'] ?? ''
@@ -48,7 +49,7 @@ factory Ingreso.fromSnapshot(DocumentSnapshot snapshot) {
       Categoria: 'Error',
       Fecha: '',
       Frecuencia: '',
-      IdUsuario: 1,
+      IdUsuario: '1',
       Monto: 0.0,
       Nombre: '',
       TipoIngrso: '',
@@ -71,13 +72,27 @@ class _IngresosState extends State<Ingresos> {
 
 
   Future<List<Ingreso>> loadFirestoreData() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('Ingresos').get();
-    List<Ingreso> lista = querySnapshot.docs
-        .map((DocumentSnapshot document) => Ingreso.fromSnapshot(document))
-        .toList();
+    User? user = FirebaseAuth.instance.currentUser;
 
-    return lista;
+     if (user == null) {
+    // El usuario no está autenticado, manejar según tus necesidades
+    return [];
+    }
+
+    try{
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Ingresos')
+        .where('IdUsuario', isEqualTo: user.uid)
+        .get();
+      List<Ingreso> lista = querySnapshot.docs
+          .map((DocumentSnapshot document) => Ingreso.fromSnapshot(document))
+          .toList();
+
+      return lista;
+    }catch(e){
+      print('Error loading data from Firebase: $e');
+    return [];
+    }
   }
  
 

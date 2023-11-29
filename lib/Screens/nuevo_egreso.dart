@@ -36,7 +36,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
       });
     }
   }
-
+ 
   void _guardarEgresoFireBase() async {
     try {
       // Obtener el usuario actualmente autenticado
