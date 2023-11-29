@@ -59,7 +59,7 @@ class LoginPage extends StatelessWidget {
                     Text(
                       "Login",
                       style: TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold),
+                          fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.02,
@@ -136,7 +136,9 @@ class LoginPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("¿No tienes una cuenta? "),
+                    Text("¿No tienes una cuenta? ",   style: TextStyle(
+        color: Colors.black, // Set the text color explicitly
+      ),),
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).pop();
@@ -194,6 +196,7 @@ class LoginPage extends StatelessWidget {
         TextField(
           controller: controller,
           obscureText: obscureText,
+          style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             enabledBorder: OutlineInputBorder(
