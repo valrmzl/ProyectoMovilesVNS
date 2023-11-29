@@ -154,6 +154,7 @@ class _EgresosState extends State<Egresos> {
           return Text('Error: ${snapshot.error}');
         } else {
           items = snapshot.data!;
+          items.sort((a, b) => b.Fecha.compareTo(a.Fecha));
           return BlocBuilder<ThemeBloc, ThemeState>(
               builder: (context, themeState) {
             List<String> categorias = [
@@ -193,7 +194,7 @@ class _EgresosState extends State<Egresos> {
                                         builder: (context) => NuevoEgreso()));
                                 if (result != null) {
                                   setState(() {
-                                    items.add(result);
+                                    items.insert(0, result);
                                     print('items:');
                                     print(items);
                                   });

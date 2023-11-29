@@ -28,6 +28,38 @@ class _BalanceState extends State<Balance> {
   double total = 0;
   double total_ingresos = 0;
   double total_egresos = 0;
+  List<dynamic> todos = [];
+
+  String getMonthName(int month) {
+    switch (month) {
+      case 1:
+        return "January";
+      case 2:
+        return "February";
+      case 3:
+        return "March";
+      case 4:
+        return "April";
+      case 5:
+        return "May";
+      case 6:
+        return "June";
+      case 7:
+        return "July";
+      case 8:
+        return "August";
+      case 9:
+        return "September";
+      case 10:
+        return "October";
+      case 11:
+        return "November";
+      case 12:
+        return "December";
+      default:
+        return "Invalid Month";
+    }
+  }
 
   Future<List<Ingreso>> loadJsonDataIngreso() async {
     final jsonString = await rootBundle.loadString('lib/data/ingreso.json');
@@ -49,7 +81,14 @@ class _BalanceState extends State<Balance> {
     return lista;
   }
 
-  Future<List<Ingreso>> loadFirebaseDataIngreso(String userId) async {
+  Future<List<Ingreso>> loadFirebaseDataIngreso() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
+    }
+    String userId = user.uid;
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Ingresos')
@@ -67,7 +106,14 @@ class _BalanceState extends State<Balance> {
     }
   }
 
-  Future<List<Egreso>> loadFirebaseDataEgreso(String userId) async {
+  Future<List<Egreso>> loadFirebaseDataEgreso() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
+    }
+    String userId = user.uid;
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Egresos')
@@ -94,32 +140,14 @@ class _BalanceState extends State<Balance> {
 
   Future<dynamic> getData() async {
     // Obtener el usuario actualmente autenticado
-    currentUser = FirebaseAuth.instance.currentUser;
-
-    // if (currentUser != null) {
-    //   // Cargar ingresos y egresos del usuario actual
-    //   loadFirebaseDataIngreso(currentUser!.uid).then((loadedDataIngreso) {
-    //     setState(() {
-    //       ingresos = loadedDataIngreso;
-    //       total_ingresos =
-    //           ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
-
-    //       loadFirebaseDataEgreso(currentUser!.uid).then((loadedDataEgreso) {
-    //         setState(() {
-    //           egresos = loadedDataEgreso;
-    //           total_egresos =
-    //               egresos.map((item) => item.Monto).reduce((a, b) => a + b);
-    //           total = total_ingresos - total_egresos;
-    //         });
-    //       });
-    //     });
-    //   }).catchError((error) {
-    //     print('Error loading ingresos: $error');
-    //     // Manejar el error según tus necesidades
-    //   });
-    // } else {
-    //   // Manejar caso en que no hay usuario autenticado
-    //   print('No hay usuario autenticado');
+    currentUser = await FirebaseAuth.instance.currentUser;
+    egresos = await loadFirebaseDataEgreso();
+    total_egresos = egresos.map((item) => item.Monto).reduce((a, b) => a + b);
+    ingresos = await loadFirebaseDataIngreso();
+    total_ingresos = ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
+    total = total_ingresos - total_egresos;
+    todos = todos + ingresos + egresos;
+    todos.sort((a, b) => a.Fecha.compareTo(b.Fecha));
   }
 
   @override
@@ -169,33 +197,34 @@ class _BalanceState extends State<Balance> {
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: Icon(
-                            geter()[index].icono,
+                            Icons.credit_score_outlined,
                             size: 30,
                             color: Colors.black,
                           ),
                         ),
-                        title: Text(geter()[index].concepto!,
+                        title: Text(todos[index].Nombre,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 15,
                             )),
-                        subtitle: Text(geter()[index].fecha!,
+                        subtitle: Text(
+                            '${todos[index].Fecha.day} ${getMonthName(todos[index].Fecha.month)} ${todos[index].Fecha.year}',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                             )),
                         trailing: Text(
-                          geter()[index].fee!,
+                          todos[index].Monto.toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 19,
-                            color: geter()[index].tipo!
+                            color: todos[index].runtimeType == Ingreso
                                 ? Colors.green
                                 : Colors.red,
                           ),
                         ),
                       );
                     },
-                    childCount: geter().length,
+                    childCount: todos.length,
                   ),
                 ),
               ],
@@ -314,8 +343,8 @@ class _BalanceState extends State<Balance> {
                     SizedBox(
                       height: 25,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
