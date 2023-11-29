@@ -12,14 +12,14 @@ import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class Egreso {
   final String Categoria;
-  final String Fecha;
+  final DateTime Fecha;
   final String Frecuencia;
   final String IdUsuario;
   final String MedioPago;
   final double Monto;
   final String Nombre;
 
- Egreso({
+  Egreso({
     required this.Categoria,
     required this.Fecha,
     required this.Frecuencia,
@@ -29,34 +29,33 @@ class Egreso {
     required this.Nombre,
   });
 
-factory Egreso.fromSnapshot(DocumentSnapshot snapshot) {
-  try {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    print('Data from Firestore: $data');
-    return Egreso(
-      Categoria: data['Categoria'] ?? '',
-      Fecha: data['Fecha'].toDate().toString() ?? '',
-      Frecuencia: data['Frecuencia'] ?? '',
-      IdUsuario: data['IdUsuario'].toString() ?? '',
-      MedioPago: data['MedioPago'] ?? '',
-      Monto: (data['Monto'] ?? 0.0).toDouble(),
-      Nombre: data['Nombre'] ?? '',
-    );
-  } catch (e, stackTrace) {
-    print('Error creating Egreso from snapshot: $e');
-    print('Stack trace: $stackTrace');
-    return Egreso(
-      Categoria: 'Error',
-      Fecha: '',
-      Frecuencia: '',
-      IdUsuario: "1",
-      MedioPago: '',
-      Monto: 0.0,
-      Nombre: '',
-    );
+  factory Egreso.fromSnapshot(DocumentSnapshot snapshot) {
+    try {
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      print('Data from Firestore: $data');
+      return Egreso(
+        Categoria: data['Categoria'] ?? '',
+        Fecha: data['Fecha'].toDate() ?? DateTime.now(),
+        Frecuencia: data['Frecuencia'] ?? '',
+        IdUsuario: data['IdUsuario'].toString() ?? '',
+        MedioPago: data['MedioPago'] ?? '',
+        Monto: (data['Monto'] ?? 0.0).toDouble(),
+        Nombre: data['Nombre'] ?? '',
+      );
+    } catch (e, stackTrace) {
+      print('Error creating Egreso from snapshot: $e');
+      print('Stack trace: $stackTrace');
+      return Egreso(
+        Categoria: 'Error',
+        Fecha: DateTime.now(),
+        Frecuencia: '',
+        IdUsuario: "1",
+        MedioPago: '',
+        Monto: 0.0,
+        Nombre: '',
+      );
+    }
   }
-}
-
 }
 
 class Egresos extends StatefulWidget {
@@ -70,35 +69,33 @@ class _EgresosState extends State<Egresos> {
   late List<Egreso> items;
   double total = 0;
 
+  Future<List<Egreso>> loadFirestoreData() async {
+    // Obtener el usuario actualmente autenticado
+    User? user = FirebaseAuth.instance.currentUser;
 
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
+    }
 
-Future<List<Egreso>> loadFirestoreData() async {
-  // Obtener el usuario actualmente autenticado
-  User? user = FirebaseAuth.instance.currentUser;
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Egresos')
+          .where('IdUsuario', isEqualTo: user.uid) // Filtrar por userId
+          .get();
 
-  if (user == null) {
-    // El usuario no está autenticado, manejar según tus necesidades
-    return [];
+      List<Egreso> lista = querySnapshot.docs
+          .map((DocumentSnapshot document) => Egreso.fromSnapshot(document))
+          .toList();
+
+      return lista;
+    } catch (e) {
+      print('Error loading data from Firebase: $e');
+      return []; // o manejar el error según tus necesidades
+    }
   }
 
-  try {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Egresos')
-        .where('IdUsuario', isEqualTo: user.uid)  // Filtrar por userId
-        .get();
-
-    List<Egreso> lista = querySnapshot.docs
-        .map((DocumentSnapshot document) => Egreso.fromSnapshot(document))
-        .toList();
-
-    return lista;
-  } catch (e) {
-    print('Error loading data from Firebase: $e');
-    return []; // o manejar el error según tus necesidades
-  }
-}
-
-    String formatDate(Timestamp timestamp) {
+  String formatDate(Timestamp timestamp) {
     // Formatear el Timestamp a un formato más legible
     DateTime dateTime = timestamp.toDate();
     return DateFormat('yyyy-MM-dd').format(dateTime);
@@ -244,7 +241,8 @@ Future<List<Egreso>> loadFirestoreData() async {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: items.length,
                     itemBuilder: (context, index) {
-                      print('Item data: ${items[index].Nombre}, ${items[index].Fecha}, ${items[index].Monto}');
+                      print(
+                          'Item data: ${items[index].Nombre}, ${items[index].Fecha}, ${items[index].Monto}');
                       return EgresoItem(
                         titulo: items[index].Nombre,
                         subtitulo1: items[index].Nombre,

@@ -12,7 +12,6 @@ import 'package:proyecto_vsn/data/list_dummy.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-
 class Balance extends StatefulWidget {
   const Balance({Key? key}) : super(key: key);
 
@@ -24,6 +23,7 @@ class _BalanceState extends State<Balance> {
   DateTime? selectedDay;
   late List<Ingreso> ingresos;
   late List<Egreso> egresos;
+  User? currentUser;
 
   double total = 0;
   double total_ingresos = 0;
@@ -53,7 +53,7 @@ class _BalanceState extends State<Balance> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Ingresos')
-          .where('IdUsuario', isEqualTo: userId)  // Filtrar por IdUsuario
+          .where('IdUsuario', isEqualTo: userId) // Filtrar por IdUsuario
           .get();
 
       List<Ingreso> lista = querySnapshot.docs
@@ -71,7 +71,7 @@ class _BalanceState extends State<Balance> {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Egresos')
-          .where('IdUsuario', isEqualTo: userId)  // Filtrar por IdUsuario
+          .where('IdUsuario', isEqualTo: userId) // Filtrar por IdUsuario
           .get();
 
       List<Egreso> lista = querySnapshot.docs
@@ -88,115 +88,122 @@ class _BalanceState extends State<Balance> {
   Future<int> loadJsonDataUser() async {
     final jsonString = await rootBundle.loadString('lib/data/user.json');
     final jsonData = json.decode(jsonString);
-    var lista =1;
+    var lista = 1;
     return lista;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    loadJsonDataUser().then((value) {
+  Future<dynamic> getData() async {
+    // Obtener el usuario actualmente autenticado
+    currentUser = FirebaseAuth.instance.currentUser;
 
-      // Obtener el usuario actualmente autenticado
-      User? currentUser = FirebaseAuth.instance.currentUser;
+    // if (currentUser != null) {
+    //   // Cargar ingresos y egresos del usuario actual
+    //   loadFirebaseDataIngreso(currentUser!.uid).then((loadedDataIngreso) {
+    //     setState(() {
+    //       ingresos = loadedDataIngreso;
+    //       total_ingresos =
+    //           ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
 
-      if (currentUser != null) {
-        // Cargar ingresos y egresos del usuario actual
-        loadFirebaseDataIngreso(currentUser.uid).then((loadedDataIngreso) {
-          setState(() {
-            ingresos = loadedDataIngreso;
-            total_ingresos = ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
-
-            loadFirebaseDataEgreso(currentUser.uid).then((loadedDataEgreso) {
-              setState(() {
-                egresos = loadedDataEgreso;
-                total_egresos = egresos.map((item) => item.Monto).reduce((a, b) => a + b);
-                total = total_ingresos - total_egresos;
-              });
-            });
-          });
-        }).catchError((error) {
-          print('Error loading ingresos: $error');
-          // Manejar el error según tus necesidades
-        });
-      } else {
-        // Manejar caso en que no hay usuario autenticado
-        print('No hay usuario autenticado');
-      }
-    }).catchError((error) {
-      print('Error loading user: $error');
-      // Manejar el error según tus necesidades
-    });
+    //       loadFirebaseDataEgreso(currentUser!.uid).then((loadedDataEgreso) {
+    //         setState(() {
+    //           egresos = loadedDataEgreso;
+    //           total_egresos =
+    //               egresos.map((item) => item.Monto).reduce((a, b) => a + b);
+    //           total = total_ingresos - total_egresos;
+    //         });
+    //       });
+    //     });
+    //   }).catchError((error) {
+    //     print('Error loading ingresos: $error');
+    //     // Manejar el error según tus necesidades
+    //   });
+    // } else {
+    //   // Manejar caso en que no hay usuario autenticado
+    //   print('No hay usuario autenticado');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(height: 280, child: _head(context)),
-            ),
-            SliverToBoxAdapter(child: Calendar()),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Historial de transacciones",
-                        style: TextStyle(
+        body: FutureBuilder<dynamic>(
+      future: getData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While data is being fetched, display a loading indicator or placeholder
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Handle errors
+          return Text('Error: ${snapshot.error}');
+        } else {
+          return SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(height: 280, child: _head(context)),
+                ),
+                SliverToBoxAdapter(child: Calendar()),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Historial de transacciones",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 19,
+                                color: Colors.black)),
+                        Text("Ver todo",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: Colors.grey)),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return ListTile(
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Icon(
+                            geter()[index].icono,
+                            size: 30,
+                            color: Colors.black,
+                          ),
+                        ),
+                        title: Text(geter()[index].concepto!,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            )),
+                        subtitle: Text(geter()[index].fecha!,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            )),
+                        trailing: Text(
+                          geter()[index].fee!,
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 19,
-                            color: Colors.black)),
-                    Text("Ver todo",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.grey)),
-                  ],
+                            color: geter()[index].tipo!
+                                ? Colors.green
+                                : Colors.red,
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: geter().length,
+                  ),
                 ),
-              ),
+              ],
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Icon(
-                        geter()[index].icono,
-                        size: 30,
-                        color: Colors.black,
-                      ),
-                    ),
-                    title: Text(geter()[index].concepto!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                        )),
-                    subtitle: Text(geter()[index].fecha!,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                        )),
-                    trailing: Text(
-                      geter()[index].fee!,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 19,
-                        color: geter()[index].tipo! ? Colors.green : Colors.red,
-                      ),
-                    ),
-                  );
-                },
-                childCount: geter().length,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        }
+      },
+    ));
   }
 
   Widget _head(context) {
@@ -235,7 +242,7 @@ class _BalanceState extends State<Balance> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 16,
                                     color: Colors.black)),
-                            Text("bob",
+                            Text(currentUser?.displayName ?? 'null',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 20,

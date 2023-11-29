@@ -11,52 +11,49 @@ import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class Ingreso {
   final String Categoria;
-  final String Fecha;
+  final DateTime Fecha;
   final String Frecuencia;
   final String IdUsuario;
   final double Monto;
   final String Nombre;
   final String TipoIngrso;
 
-  Ingreso(
-      {required this.Categoria,
-      required this.Fecha,
-      required this.Frecuencia,
-      required this.IdUsuario,
-      required this.Monto,
-      required this.Nombre,
-      required this.TipoIngrso,
-      
-      });
-  
-factory Ingreso.fromSnapshot(DocumentSnapshot snapshot) {
-  try {
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    print('Data from Firestore: $data');
-    return Ingreso(
-      Categoria: data['Categoria'] ?? '',
-      Fecha: data['Fecha'].toDate().toString() ?? '',
-      Frecuencia: data['Frecuencia'] ?? '',
-      IdUsuario: data['IdUsuario'].toString() ?? '',
-      Monto: (data['Monto'] ?? 0.0).toDouble(),
-      Nombre: data['Nombre'] ?? '',
-      TipoIngrso: data['TipoIngreso'] ?? ''
-    );
-  } catch (e, stackTrace) {
-    print('Error creating Egreso from snapshot: $e');
-    print('Stack trace: $stackTrace');
-    return Ingreso(
-      Categoria: 'Error',
-      Fecha: '',
-      Frecuencia: '',
-      IdUsuario: '1',
-      Monto: 0.0,
-      Nombre: '',
-      TipoIngrso: '',
-    );
+  Ingreso({
+    required this.Categoria,
+    required this.Fecha,
+    required this.Frecuencia,
+    required this.IdUsuario,
+    required this.Monto,
+    required this.Nombre,
+    required this.TipoIngrso,
+  });
+
+  factory Ingreso.fromSnapshot(DocumentSnapshot snapshot) {
+    try {
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      print('Data from Firestore: $data');
+      return Ingreso(
+          Categoria: data['Categoria'] ?? '',
+          Fecha: data['Fecha'].toDate() ?? DateTime.now(),
+          Frecuencia: data['Frecuencia'] ?? '',
+          IdUsuario: data['IdUsuario'].toString() ?? '',
+          Monto: (data['Monto'] ?? 0.0).toDouble(),
+          Nombre: data['Nombre'] ?? '',
+          TipoIngrso: data['TipoIngreso'] ?? '');
+    } catch (e, stackTrace) {
+      print('Error creating Egreso from snapshot: $e');
+      print('Stack trace: $stackTrace');
+      return Ingreso(
+        Categoria: 'Error',
+        Fecha: DateTime.now(),
+        Frecuencia: '',
+        IdUsuario: '1',
+        Monto: 0.0,
+        Nombre: '',
+        TipoIngrso: '',
+      );
+    }
   }
-}
-  
 }
 
 class Ingresos extends StatefulWidget {
@@ -70,31 +67,29 @@ class _IngresosState extends State<Ingresos> {
   late List<Ingreso> items;
   double total = 0;
 
-
   Future<List<Ingreso>> loadFirestoreData() async {
     User? user = FirebaseAuth.instance.currentUser;
 
-     if (user == null) {
-    // El usuario no está autenticado, manejar según tus necesidades
-    return [];
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
     }
 
-    try{
+    try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Ingresos')
-        .where('IdUsuario', isEqualTo: user.uid)
-        .get();
+          .collection('Ingresos')
+          .where('IdUsuario', isEqualTo: user.uid)
+          .get();
       List<Ingreso> lista = querySnapshot.docs
           .map((DocumentSnapshot document) => Ingreso.fromSnapshot(document))
           .toList();
 
       return lista;
-    }catch(e){
+    } catch (e) {
       print('Error loading data from Firebase: $e');
-    return [];
+      return [];
     }
   }
- 
 
   String getMonthName(int month) {
     switch (month) {
@@ -128,7 +123,6 @@ class _IngresosState extends State<Ingresos> {
   }
 
   @override
-
   void initState() {
     super.initState();
     loadFirestoreData().then((loadedData) {
@@ -138,7 +132,6 @@ class _IngresosState extends State<Ingresos> {
       });
     });
   }
- 
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +227,6 @@ class _IngresosState extends State<Ingresos> {
                     ]),
                   ),
                   ListView.builder(
-                  
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: items.length,

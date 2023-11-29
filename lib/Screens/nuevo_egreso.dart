@@ -36,26 +36,28 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
       });
     }
   }
- 
+
   void _guardarEgresoFireBase() async {
     try {
       // Obtener el usuario actualmente autenticado
       User? user = FirebaseAuth.instance.currentUser;
- 
 
       if (user != null) {
         // Usuario autenticado
 
-        CollectionReference egresosCollection = FirebaseFirestore.instance.collection("Egresos");
+        CollectionReference egresosCollection =
+            FirebaseFirestore.instance.collection("Egresos");
 
         DateTime now = DateTime.now();
         int monto = int.tryParse(montoEgreso.text) ?? 0;
 
         Map<String, dynamic> data = {
           'Categoria': categoriaSeleccionada,
-          'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null,
+          'Fecha': fechaSeleccionada != null
+              ? Timestamp.fromDate(fechaSeleccionada!)
+              : Timestamp.fromDate(DateTime.now()),
           'Frecuencia': frecuenciaSeleccionada,
-          'IdUsuario': user.uid,  // Usar el UID del usuario autenticado
+          'IdUsuario': user.uid, // Usar el UID del usuario autenticado
           'MedioPago': recibidoSeleccionado,
           'Monto': monto,
           'Nombre': nombre.text,
@@ -129,7 +131,8 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                         children: <Widget>[
                           Text(
                             "Hola otra vez :)",
-                            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 30, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -137,11 +140,24 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                         padding: EdgeInsets.symmetric(horizontal: 40),
                         child: Column(
                           children: <Widget>[
-                            makeInput(label: "¿Cuál es el monto de tu gasto? ", controller: montoEgreso),
-                            makeInput(label: "¿Qué nombre le quieres dar? ", controller: nombre),
-                            makeDropdown(label: "¿Con que medio hiciste este pago?", options: recibido, selectedValue: recibidoSeleccionado),
-                            makeDropdown(label: "Categoría de tu gasto", options: categorias, selectedValue: categoriaSeleccionada),
-                            makeDropdown(label: "¿Cada cuanto te llega este ingreso?", options: frecuencia, selectedValue: frecuenciaSeleccionada),
+                            makeInput(
+                                label: "¿Cuál es el monto de tu gasto? ",
+                                controller: montoEgreso),
+                            makeInput(
+                                label: "¿Qué nombre le quieres dar? ",
+                                controller: nombre),
+                            makeDropdown(
+                                label: "¿Con que medio hiciste este pago?",
+                                options: recibido,
+                                selectedValue: recibidoSeleccionado),
+                            makeDropdown(
+                                label: "Categoría de tu gasto",
+                                options: categorias,
+                                selectedValue: categoriaSeleccionada),
+                            makeDropdown(
+                                label: "¿Cada cuanto te llega este ingreso?",
+                                options: frecuencia,
+                                selectedValue: frecuenciaSeleccionada),
                             TextFormField(
                               onTap: () async {
                                 await _selectDate(context);
@@ -183,10 +199,12 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                             },
                             color: themeState.themeData.colorScheme.secondary,
                             elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
                             child: Text(
                               "Agregar gasto",
-                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 18),
                             ),
                           ),
                         ),
@@ -202,13 +220,18 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
     );
   }
 
-  Widget makeInput({String? label, bool obscureText = false, String? value, TextEditingController? controller}) {
+  Widget makeInput(
+      {String? label,
+      bool obscureText = false,
+      String? value,
+      TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label ?? '',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+          style: TextStyle(
+              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
         ),
         SizedBox(height: 5),
         Container(
@@ -235,13 +258,15 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
     );
   }
 
-  Widget makeDropdown({String? label, List<String> options = const [], String? selectedValue}) {
+  Widget makeDropdown(
+      {String? label, List<String> options = const [], String? selectedValue}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label ?? '',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+          style: TextStyle(
+              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
         ),
         SizedBox(height: 5),
         Container(

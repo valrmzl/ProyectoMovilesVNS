@@ -12,7 +12,6 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-
   //text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -21,42 +20,77 @@ class _CreateAccountState extends State<CreateAccount> {
   final _apellidoController = TextEditingController();
 
   Future SignUp() async {
-    if(confirmasPassword()){
-
+    if (confirmasPassword()) {
       //se crea el usuario
-       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      
-      email: _emailController.text.trim(), 
-      password: _passwordController.text.trim()
-      );
+      UserCredential userCred = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim());
 
+      User? user = userCred.user;
+      await user!.updateDisplayName(
+          _nombreController.text.trim() + _apellidoController.text.trim());
       //añadir otros detalles
-      addUserDetails(_nombreController.text.trim(), _apellidoController.text.trim(), _emailController.text.trim(), _passwordController.text.trim());
-
+      addUserDetails(
+          _nombreController.text.trim(),
+          _apellidoController.text.trim(),
+          _emailController.text.trim(),
+          _passwordController.text.trim());
     }
-   
+
+    bool signInSuccess = await signUserIn(context);
+
+    if (signInSuccess) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    }
   }
 
-  Future addUserDetails(String nombre, String apellido, String email, String password) async {
-    await FirebaseFirestore.instance.collection("Users").add({
+  Future<bool> signUserIn(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // Inicio de sesión exitoso
+      return true;
+    } catch (e) {
+      // Manejo de errores
+      print("Error durante el inicio de sesión: $e");
+      // Muestra un SnackBar con el mensaje de error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error durante el inicio de sesión: $e"),
+        ),
+      );
+      // Inicio de sesión fallido
+      return false;
+    }
+    print('se inicia sesion');
+  }
 
+  Future addUserDetails(
+      String nombre, String apellido, String email, String password) async {
+    await FirebaseFirestore.instance.collection("Users").add({
       'Nombre': nombre,
       'Apellido': apellido,
       'Email': email,
       'Password': password
-
-    }
-    );
+    });
   }
 
-  bool confirmasPassword(){
-    if (_passwordController.text.trim() == _confirmpasswordController.text.trim()){
+  bool confirmasPassword() {
+    if (_passwordController.text.trim() ==
+        _confirmpasswordController.text.trim()) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +100,6 @@ class _CreateAccountState extends State<CreateAccount> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-       
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -83,15 +116,16 @@ class _CreateAccountState extends State<CreateAccount> {
                       Text(
                         "Sign up",
                         style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       Text(
                         "Crea una cuenta",
-                        style: TextStyle(
-                            fontSize: 15, color: Colors.grey[700]),
+                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                       ),
                     ],
                   ),
@@ -99,11 +133,20 @@ class _CreateAccountState extends State<CreateAccount> {
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: <Widget>[
-                        makeInput(label: "Nombre ", controller: _nombreController),
-                        makeInput(label: "Apellido ", controller: _apellidoController),
+                        makeInput(
+                            label: "Nombre ", controller: _nombreController),
+                        makeInput(
+                            label: "Apellido ",
+                            controller: _apellidoController),
                         makeInput(label: "Email", controller: _emailController),
-                        makeInput(label: "Password", obscureText: true, controller: _passwordController),
-                        makeInput(label: "Confirmar password", obscureText: true, controller: _confirmpasswordController),
+                        makeInput(
+                            label: "Password",
+                            obscureText: true,
+                            controller: _passwordController),
+                        makeInput(
+                            label: "Confirmar password",
+                            obscureText: true,
+                            controller: _confirmpasswordController),
                       ],
                     ),
                   ),
@@ -122,9 +165,8 @@ class _CreateAccountState extends State<CreateAccount> {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () {
-                          SignUp();
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
+                        onPressed: () async {
+                          await SignUp();
                         },
                         color: Color.fromARGB(255, 184, 243, 223),
                         elevation: 0,
@@ -139,42 +181,43 @@ class _CreateAccountState extends State<CreateAccount> {
                     ),
                   ),
                   Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: <Widget>[
-    Text("¿Ya tienes una cuenta?   ", style: TextStyle(color: Colors.black)),
-    GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop();
-        // Navegar a la página de inicio (HomePage)
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => LoginPage(),
-          ),
-        );
-      },
-      child: Text(
-        "Login",
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-          color: Colors.black, // Cambia el color del texto si lo deseas
-        ),
-      ),
-    ),
-  ],
-)
-
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("¿Ya tienes una cuenta?   ",
+                          style: TextStyle(color: Colors.black)),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          // Navegar a la página de inicio (HomePage)
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color: Colors
+                                .black, // Cambia el color del texto si lo deseas
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
-            
           ],
         ),
       ),
     );
   }
 
-  Widget makeInput({label, obscureText = false, TextEditingController? controller}) {
+  Widget makeInput(
+      {label, obscureText = false, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -189,14 +232,13 @@ class _CreateAccountState extends State<CreateAccount> {
         TextField(
           controller: controller,
           obscureText: obscureText,
-            style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border:
+                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
         ),
         SizedBox(
