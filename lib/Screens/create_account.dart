@@ -66,12 +66,7 @@ class _CreateAccountState extends State<CreateAccount> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
-        ),
+       
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -146,7 +141,7 @@ class _CreateAccountState extends State<CreateAccount> {
                   Row(
   mainAxisAlignment: MainAxisAlignment.center,
   children: <Widget>[
-    Text("¿Ya tienes una cuenta?   "),
+    Text("¿Ya tienes una cuenta?   ", style: TextStyle(color: Colors.black)),
     GestureDetector(
       onTap: () {
         Navigator.of(context).pop();
