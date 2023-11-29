@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,25 +9,53 @@ import 'package:proyecto_vsn/Screens/nuevo_ingreso.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class Ingreso {
-  final String titulo;
-  final String subtitulo1;
-  final String fecha;
-  final double precio;
+  final String Categoria;
+  final String Fecha;
+  final String Frecuencia;
+  final int IdUsuario;
+  final double Monto;
+  final String Nombre;
+  final String TipoIngrso;
 
   Ingreso(
-      {required this.titulo,
-      required this.subtitulo1,
-      required this.fecha,
-      required this.precio});
-
-  factory Ingreso.fromJson(Map<String, dynamic> json) {
+      {required this.Categoria,
+      required this.Fecha,
+      required this.Frecuencia,
+      required this.IdUsuario,
+      required this.Monto,
+      required this.Nombre,
+      required this.TipoIngrso,
+      
+      });
+  
+factory Ingreso.fromSnapshot(DocumentSnapshot snapshot) {
+  try {
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    print('Data from Firestore: $data');
     return Ingreso(
-      titulo: json['titulo'] as String,
-      subtitulo1: json['subtitulo1'] as String,
-      fecha: json['fecha'] as String,
-      precio: json['precio'].toDouble() as double,
+      Categoria: data['Categoria'] ?? '',
+      Fecha: data['Fecha'].toDate().toString() ?? '',
+      Frecuencia: data['Frecuencia'] ?? '',
+      IdUsuario: data['IdUsuario'].toInt() ?? '',
+      Monto: (data['Monto'] ?? 0.0).toDouble(),
+      Nombre: data['Nombre'] ?? '',
+      TipoIngrso: data['TipoIngreso'] ?? ''
+    );
+  } catch (e, stackTrace) {
+    print('Error creating Egreso from snapshot: $e');
+    print('Stack trace: $stackTrace');
+    return Ingreso(
+      Categoria: 'Error',
+      Fecha: '',
+      Frecuencia: '',
+      IdUsuario: 1,
+      Monto: 0.0,
+      Nombre: '',
+      TipoIngrso: '',
     );
   }
+}
+  
 }
 
 class Ingresos extends StatefulWidget {
@@ -40,15 +69,17 @@ class _IngresosState extends State<Ingresos> {
   late List<Ingreso> items;
   double total = 0;
 
-  Future<List<Ingreso>> loadJsonData() async {
-    final jsonString = await rootBundle.loadString('lib/data/ingreso.json');
-    final jsonData = json.decode(jsonString);
-    List<Ingreso> lista = [];
-    for (int i = 0; i < jsonData.length; i++) {
-      lista.add(Ingreso.fromJson(jsonData[i]));
-    }
+
+  Future<List<Ingreso>> loadFirestoreData() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Ingresos').get();
+    List<Ingreso> lista = querySnapshot.docs
+        .map((DocumentSnapshot document) => Ingreso.fromSnapshot(document))
+        .toList();
+
     return lista;
   }
+ 
 
   String getMonthName(int month) {
     switch (month) {
@@ -82,20 +113,22 @@ class _IngresosState extends State<Ingresos> {
   }
 
   @override
+
   void initState() {
     super.initState();
-    loadJsonData().then((loadedData) {
+    loadFirestoreData().then((loadedData) {
       setState(() {
         items = loadedData;
-        total = items.map((item) => item.precio).reduce((a, b) => a + b);
+        total = items.map((item) => item.Monto).reduce((a, b) => a + b);
       });
     });
   }
+ 
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Ingreso>>(
-      future: loadJsonData(),
+      future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Show a loading indicator.
@@ -192,12 +225,12 @@ class _IngresosState extends State<Ingresos> {
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       return IngresoItem(
-                        titulo: items[index].titulo,
-                        subtitulo1: items[index].subtitulo1,
+                        titulo: items[index].Nombre,
+                        subtitulo1: items[index].Nombre,
                         fecha: items[index]
-                            .fecha, // Reemplaza con el valor correcto
+                            .Fecha, // Reemplaza con el valor correcto
                         precio: items[index]
-                            .precio, // Reemplaza con el valor correcto
+                            .Monto, // Reemplaza con el valor correcto
                       );
                     },
                   ),

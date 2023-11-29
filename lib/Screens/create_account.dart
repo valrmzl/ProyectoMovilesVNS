@@ -1,9 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_vsn/Screens/home_page.dart';
 import 'package:proyecto_vsn/Screens/login_page.dart';
 
-class CreateAccount extends StatelessWidget {
+class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key});
+
+  @override
+  State<CreateAccount> createState() => _CreateAccountState();
+}
+
+class _CreateAccountState extends State<CreateAccount> {
+
+  //text controllers
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmpasswordController = TextEditingController();
+  final _nombreController = TextEditingController();
+  final _apellidoController = TextEditingController();
+
+  Future SignUp() async {
+    if(confirmasPassword()){
+
+      //se crea el usuario
+       await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      
+      email: _emailController.text.trim(), 
+      password: _passwordController.text.trim()
+      );
+
+      //añadir otros detalles
+      addUserDetails(_nombreController.text.trim(), _apellidoController.text.trim(), _emailController.text.trim(), _passwordController.text.trim());
+
+    }
+   
+  }
+
+  Future addUserDetails(String nombre, String apellido, String email, String password) async {
+    await FirebaseFirestore.instance.collection("Users").add({
+
+      'Nombre': nombre,
+      'Apellido': apellido,
+      'Email': email,
+      'Password': password
+
+    }
+    );
+  }
+
+  bool confirmasPassword(){
+    if (_passwordController.text.trim() == _confirmpasswordController.text.trim()){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +104,11 @@ class CreateAccount extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: <Widget>[
-                        makeInput(label: "Nombre "),
-                        makeInput(label: "Apellido "),
-                        makeInput(label: "Email"),
-                        makeInput(label: "Password", obscureText: true),
-                        makeInput(label: "Confirmar password", obscureText: true),
+                        makeInput(label: "Nombre ", controller: _nombreController),
+                        makeInput(label: "Apellido ", controller: _apellidoController),
+                        makeInput(label: "Email", controller: _emailController),
+                        makeInput(label: "Password", obscureText: true, controller: _passwordController),
+                        makeInput(label: "Confirmar password", obscureText: true, controller: _confirmpasswordController),
                       ],
                     ),
                   ),
@@ -75,6 +128,7 @@ class CreateAccount extends StatelessWidget {
                         minWidth: double.infinity,
                         height: 60,
                         onPressed: () {
+                          SignUp();
                           Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
                         },
                         color: Color.fromARGB(255, 184, 243, 223),
@@ -125,7 +179,7 @@ class CreateAccount extends StatelessWidget {
     );
   }
 
-  Widget makeInput({label, obscureText = false}) {
+  Widget makeInput({label, obscureText = false, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -138,6 +192,7 @@ class CreateAccount extends StatelessWidget {
           height: 5,
         ),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding:

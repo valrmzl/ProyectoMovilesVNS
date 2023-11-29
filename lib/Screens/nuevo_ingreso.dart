@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
@@ -10,6 +11,11 @@ class NuevoIngreso extends StatefulWidget {
 }
 
 class _NuevoIngresoState extends State<NuevoIngreso> {
+  final montoIngreso = TextEditingController();
+  final nombre = TextEditingController();
+  String tipoIngreso = 'Efecitvo';
+  String categoriaSeleccionada = 'Salario';
+  String frecuenciaSeleccionada = 'Sin frecuencia';
   DateTime? fechaSeleccionada; // Variable para almacenar la fecha seleccionada.
 
   Future<void> _selectDate(BuildContext context) async {
@@ -25,6 +31,34 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
       });
     }
   }
+
+    void _guardarIngresoFireBase() async {
+    try {
+      CollectionReference testCollection = FirebaseFirestore.instance.collection("Ingresos");
+
+      DateTime now = DateTime.now();
+      // Convierte el valor del campo 'Monto' a un entero
+    int monto = int.tryParse(montoIngreso.text) ?? 0;
+
+
+
+      Map<String, dynamic> data = {
+        'Monto': monto,
+        'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null,
+        'Nombre': nombre.text,
+        'Frecuencia': frecuenciaSeleccionada,
+        'IdUsuario': 1,
+        "Categoria": categoriaSeleccionada,
+        'TipoIngreso': tipoIngreso
+      };
+
+      await testCollection.add(data);
+      print("Egreso agregado exitosamente");
+    } catch (e) {
+      print("Error al agregar el egreso: $e");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +121,8 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                     child: Column(
                       children: <Widget>[
                         makeInput(
-                            label: "¿Cuál es el monto de tu ingreso? "),
-                        makeInput(label: "¿Qué nombre le quieres dar? "),
+                            label: "¿Cuál es el monto de tu ingreso? ", controller: montoIngreso),
+                        makeInput(label: "¿Qué nombre le quieres dar? ", controller: nombre ),
                         makeDropdown(
                             label: "¿El ingreso lo recibiste en?",
                             options: recibido,
@@ -101,17 +135,22 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                             label: "¿Cada cuanto te llega este ingreso?",
                             options: frecuencia,
                             selectedValue: frecuenciaSeleccionada),
-                        GestureDetector(
-                          onTap: () {
-                            _selectDate(context); // Abre el selector de fecha.
-                          },
-                          child: makeInput(
-                            label: "Fecha de tu ingreso",
-                            value: fechaSeleccionada != null
-                                ? "${fechaSeleccionada!.day}/${fechaSeleccionada!.month}/${fechaSeleccionada!.year}"
-                                : "Selecciona una fecha",
-                          ),
-                        ),
+                       TextFormField(
+                              onTap: () async {
+                                await _selectDate(context);
+                                setState(() {});
+                              },
+                              readOnly: true,
+                              controller: TextEditingController(
+                                text: fechaSeleccionada != null
+                                    ? "${fechaSeleccionada!.day}/${fechaSeleccionada!.month}/${fechaSeleccionada!.year}"
+                                    : "Selecciona una fecha",
+                              ),
+                              decoration: InputDecoration(
+                                labelText: "Fecha de tu ingreso",
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
                       ],
                     ),
                   ),
@@ -133,6 +172,7 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                         height: 60,
                         onPressed: () {
                           Navigator.pop(context);
+                          _guardarIngresoFireBase();
                         },
                          color: themeState.themeData.colorScheme.onPrimaryContainer,
                         elevation: 0,
@@ -161,48 +201,35 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     
   }
 
-  Widget makeInput(
-      {String? label, bool obscureText = false, String? value}) {
+  Widget makeInput({String? label, bool obscureText = false, String? value, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label ?? '',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
         ),
-        SizedBox(
-          height: 5,
-        ),
+        SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(5),
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    value ?? '',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ),
+          child: TextField(
+            controller: controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
               ),
-            ],
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
+              ),
+            ),
           ),
         ),
-        SizedBox(
-          height: 30,
-        ),
+        SizedBox(height: 30),
       ],
     );
   }

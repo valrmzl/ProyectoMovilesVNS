@@ -1,10 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_vsn/Screens/create_account.dart';
 import 'package:proyecto_vsn/Screens/home_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+ Future<bool> signUserIn(BuildContext context) async {
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    // Inicio de sesión exitoso
+    return true;
+  } catch (e) {
+    // Manejo de errores
+    print("Error durante el inicio de sesión: $e");
+    // Muestra un SnackBar con el mensaje de error
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Error durante el inicio de sesión: $e"),
+      ),
+    );
+    // Inicio de sesión fallido
+    return false;
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +78,8 @@ class LoginPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: <Widget>[
-                        makeInput(label: "Email"),
-                        makeInput(label: "Password", obscureText: true),
+                        makeInput(label: "Email",obscureText: false, controller: emailController),
+                        makeInput(label: "Password", obscureText: true, controller: passwordController),
                       ],
                     ),
                   ),
@@ -71,13 +98,18 @@ class LoginPage extends StatelessWidget {
                       child: MaterialButton(
                         minWidth: double.infinity,
                         height: 60,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(),
-                            ),
-                          );
+                        onPressed: () async {
+                          bool signInSuccess = await signUserIn(context);
+
+                          if (signInSuccess) {
+                                // Navegar a la página de inicio (HomePage) si el inicio de sesión fue exitoso
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomePage(),
+                                    ),
+                                  );
+                                }
                         },
                         color: Color.fromARGB(255, 184, 243, 223),
                         elevation: 0,
@@ -133,7 +165,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget makeInput({label, obscureText = false}) {
+  Widget makeInput({label, obscureText = false, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -146,6 +178,7 @@ class LoginPage extends StatelessWidget {
           height: 5,
         ),
         TextField(
+          controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),

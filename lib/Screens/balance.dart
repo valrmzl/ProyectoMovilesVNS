@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +57,7 @@ class _BalanceState extends State<Balance> {
     final jsonData = json.decode(jsonString);
     List<Ingreso> lista = [];
     for (int i = 0; i < jsonData.length; i++) {
-      lista.add(Ingreso.fromJson(jsonData[i]));
+      //lista.add(Ingreso.fromJson(jsonData[i]));
     }
     return lista;
   }
@@ -66,10 +67,39 @@ class _BalanceState extends State<Balance> {
     final jsonData = json.decode(jsonString);
     List<Egreso> lista = [];
     for (int i = 0; i < jsonData.length; i++) {
-      lista.add(Egreso.fromJson(jsonData[i]));
+     // lista.add(Egreso.fromJson(jsonData[i]));
     }
     return lista;
   }
+
+  Future<List<Ingreso>> loadFirebaseDataIngreso() async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Ingresos').get();
+    List<Ingreso> lista = querySnapshot.docs
+        .map((DocumentSnapshot document) => Ingreso.fromSnapshot(document))
+        .toList();
+
+    return lista;
+  } catch (e) {
+    print('Error loading ingresos from Firebase: $e');
+    return []; // o manejar el error según tus necesidades
+  }
+}
+
+Future<List<Egreso>> loadFirebaseDataEgreso() async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Egresos').get();
+    List<Egreso> lista = querySnapshot.docs
+        .map((DocumentSnapshot document) => Egreso.fromSnapshot(document))
+        .toList();
+
+    return lista;
+  } catch (e) {
+    print('Error loading egresos from Firebase: $e');
+    return []; // o manejar el error según tus necesidades
+  }
+}
+
 
   Future<User> loadJsonDataUser() async {
     final jsonString = await rootBundle.loadString('lib/data/user.json');
@@ -79,6 +109,36 @@ class _BalanceState extends State<Balance> {
   }
 
   @override
+  @override
+void initState() {
+  super.initState();
+  loadJsonDataUser().then((value) {
+    user = value;
+    loadFirebaseDataIngreso().then((loadedDataIngreso) {
+      setState(() {
+        ingresos = loadedDataIngreso;
+        total_ingresos =
+            ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
+        loadFirebaseDataEgreso().then((loadedDataEgreso) {
+          setState(() {
+            egresos = loadedDataEgreso;
+            total_egresos =
+                egresos.map((item) => item.Monto).reduce((a, b) => a + b);
+            total = total_ingresos - total_egresos;
+          });
+        });
+      });
+    }).catchError((error) {
+      print('Error loading ingresos: $error');
+      // Manejar el error según tus necesidades
+    });
+  }).catchError((error) {
+    print('Error loading user: $error');
+    // Manejar el error según tus necesidades
+  });
+}
+
+  /*
   void initState() {
     super.initState();
     loadJsonDataUser().then(
@@ -88,12 +148,12 @@ class _BalanceState extends State<Balance> {
           setState(() {
             ingresos = loadedDataIngreso;
             total_ingresos =
-                ingresos.map((item) => item.precio).reduce((a, b) => a + b);
+                ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
             loadJsonDataEgreso().then((loadedDataEgreso) {
               setState(() {
                 egresos = loadedDataEgreso;
                 total_egresos =
-                    egresos.map((item) => item.precio).reduce((a, b) => a + b);
+                    egresos.map((item) => item.Monto).reduce((a, b) => a + b);
                 total = total_ingresos - total_egresos;
               });
             });
@@ -101,7 +161,7 @@ class _BalanceState extends State<Balance> {
         });
       },
     );
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

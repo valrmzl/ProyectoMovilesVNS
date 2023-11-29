@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_vsn/firebase_options.dart';
+
+//instalamos la coleccion a firebase
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NuevaMeta extends StatefulWidget {
   const NuevaMeta({super.key});
@@ -8,6 +12,56 @@ class NuevaMeta extends StatefulWidget {
 }
 
 class _NuevaMetaState extends State<NuevaMeta> {
+  final fuenteAhorro = TextEditingController();
+  final nombreAhorro = TextEditingController();
+  final montoAhorro = TextEditingController();
+
+
+
+  DateTime? fechaSeleccionada;
+
+  
+
+   Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = (await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    ))!;
+    if (picked != null && picked != fechaSeleccionada) {
+      setState(() {
+        fechaSeleccionada = picked;
+      });
+    }
+  }
+
+
+  void _guardarAhorroFireBase() async {
+    try {
+      CollectionReference testCollection = FirebaseFirestore.instance.collection("Ahorros");
+
+      DateTime now = DateTime.now();
+      // Convierte el valor del campo 'Monto' a un entero
+      int monto = int.tryParse(montoAhorro.text) ?? 0;
+
+
+
+      Map<String, dynamic> data = {
+        'IdUsuario': 1,
+        'Nombre': nombreAhorro.text,
+        'Monto': monto,
+        'Fuente': fuenteAhorro.text,
+        'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null
+      };
+
+      await testCollection.add(data);
+      print("Egreso agregado exitosamente");
+    } catch (e) {
+      print("Error al agregar el egreso: $e");
+    }
+  }
+
   List<String> monthsOfYear = [
     'January',
     'February',
@@ -57,6 +111,7 @@ class _NuevaMetaState extends State<NuevaMeta> {
               ),
             ),
             TextField(
+              controller: nombreAhorro,
                 decoration: InputDecoration(
               hintText: 'Nombre de tu meta', // Customized hint text
               border: OutlineInputBorder(
@@ -74,6 +129,7 @@ class _NuevaMetaState extends State<NuevaMeta> {
               ),
             ),
             TextField(
+              controller: montoAhorro,
                 decoration: InputDecoration(
               hintText: r'$0.00', // Customized hint text
               border: OutlineInputBorder(
@@ -90,6 +146,7 @@ class _NuevaMetaState extends State<NuevaMeta> {
                   style: TextStyle(color: Colors.grey.shade800)),
             ),
             TextField(
+              controller: fuenteAhorro,
                 decoration: InputDecoration(
               hintText: 'Cuenta BBVA', // Customized hint text
               border: OutlineInputBorder(
@@ -107,19 +164,14 @@ class _NuevaMetaState extends State<NuevaMeta> {
             ),
             TextField(
                 onTap: () {
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2100),
-                  ).then((selectedDate) {
-                    if (selectedDate != null) {
-                      // Actualizar el valor del campo con la fecha seleccionada
-                      // Puedes usar el controlador del campo para hacerlo
-                      // Ejemplo: _textController.text = selectedDate.toLocal().toString();
-                    }
-                  });
+                  _selectDate(context);
                 },
+                readOnly: true,
+              controller: TextEditingController(
+                text: fechaSeleccionada != null
+                    ? "${fechaSeleccionada!.day} ${monthsOfYear[fechaSeleccionada!.month - 1]} ${fechaSeleccionada!.year}"
+                    : "Selecciona una fecha",
+              ),
                 decoration: InputDecoration(
                   hintText:
                       '${date.day} ${monthsOfYear[date.month]} ${date.year}', // Customized hint text
@@ -138,6 +190,7 @@ class _NuevaMetaState extends State<NuevaMeta> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
+                    _guardarAhorroFireBase();
                   },
                   child: Text(
                     'Hecho',

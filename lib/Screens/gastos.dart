@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,25 +10,52 @@ import 'package:proyecto_vsn/Screens/nuevo_egreso.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class Egreso {
-  final String titulo;
-  final String subtitulo1;
-  final String fecha;
-  final double precio;
+  final String Categoria;
+  final String Fecha;
+  final String Frecuencia;
+  final int IdUsuario;
+  final String MedioPago;
+  final double Monto;
+  final String Nombre;
 
-  Egreso(
-      {required this.titulo,
-      required this.subtitulo1,
-      required this.fecha,
-      required this.precio});
+ Egreso({
+    required this.Categoria,
+    required this.Fecha,
+    required this.Frecuencia,
+    required this.IdUsuario,
+    required this.MedioPago,
+    required this.Monto,
+    required this.Nombre,
+  });
 
-  factory Egreso.fromJson(Map<String, dynamic> json) {
+factory Egreso.fromSnapshot(DocumentSnapshot snapshot) {
+  try {
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    print('Data from Firestore: $data');
     return Egreso(
-      titulo: json['titulo'] as String,
-      subtitulo1: json['subtitulo1'] as String,
-      fecha: json['fecha'] as String,
-      precio: json['precio'].toDouble() as double,
+      Categoria: data['Categoria'] ?? '',
+      Fecha: data['Fecha'].toDate().toString() ?? '',
+      Frecuencia: data['Frecuencia'] ?? '',
+      IdUsuario: data['IdUsuario'].toInt() ?? '',
+      MedioPago: data['MedioPago'] ?? '',
+      Monto: (data['Monto'] ?? 0.0).toDouble(),
+      Nombre: data['Nombre'] ?? '',
+    );
+  } catch (e, stackTrace) {
+    print('Error creating Egreso from snapshot: $e');
+    print('Stack trace: $stackTrace');
+    return Egreso(
+      Categoria: 'Error',
+      Fecha: '',
+      Frecuencia: '',
+      IdUsuario: 1,
+      MedioPago: '',
+      Monto: 0.0,
+      Nombre: '',
     );
   }
+}
+
 }
 
 class Egresos extends StatefulWidget {
@@ -40,23 +69,31 @@ class _EgresosState extends State<Egresos> {
   late List<Egreso> items;
   double total = 0;
 
-  Future<List<Egreso>> loadJsonData() async {
-    final jsonString = await rootBundle.loadString('lib/data/egreso.json');
-    final jsonData = json.decode(jsonString);
-    List<Egreso> lista = [];
-    for (int i = 0; i < jsonData.length; i++) {
-      lista.add(Egreso.fromJson(jsonData[i]));
-    }
+
+
+  Future<List<Egreso>> loadFirestoreData() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('Egresos').get();
+    List<Egreso> lista = querySnapshot.docs
+        .map((DocumentSnapshot document) => Egreso.fromSnapshot(document))
+        .toList();
+
     return lista;
+  }
+
+    String formatDate(Timestamp timestamp) {
+    // Formatear el Timestamp a un formato más legible
+    DateTime dateTime = timestamp.toDate();
+    return DateFormat('yyyy-MM-dd').format(dateTime);
   }
 
   @override
   void initState() {
     super.initState();
-    loadJsonData().then((loadedData) {
+    loadFirestoreData().then((loadedData) {
       setState(() {
         items = loadedData;
-        total = items.map((item) => item.precio).reduce((a, b) => a + b);
+        total = items.map((item) => item.Monto).reduce((a, b) => a + b);
       });
     });
   }
@@ -95,7 +132,7 @@ class _EgresosState extends State<Egresos> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Egreso>>(
-      future: loadJsonData(),
+      future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Show a loading indicator.
@@ -190,13 +227,14 @@ class _EgresosState extends State<Egresos> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: items.length,
                     itemBuilder: (context, index) {
+                      print('Item data: ${items[index].Nombre}, ${items[index].Fecha}, ${items[index].Monto}');
                       return EgresoItem(
-                        titulo: items[index].titulo,
-                        subtitulo1: items[index].subtitulo1,
+                        titulo: items[index].Nombre,
+                        subtitulo1: items[index].Nombre,
                         fecha: items[index]
-                            .fecha, // Reemplaza con el valor correcto
+                            .Fecha, // Reemplaza con el valor correcto
                         precio: items[index]
-                            .precio, // Reemplaza con el valor correcto
+                            .Monto, // Reemplaza con el valor correcto
                       );
                     },
                   ),

@@ -17,6 +17,7 @@ class EgresoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, themeState){
         return Card(
