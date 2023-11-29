@@ -186,11 +186,18 @@ class _EgresosState extends State<Egresos> {
                           Padding(
                             padding: const EdgeInsets.only(right: 20.0),
                             child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                var result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => NuevoEgreso()));
+                                if (result != null) {
+                                  setState(() {
+                                    items.add(result);
+                                    print('items:');
+                                    print(items);
+                                  });
+                                }
                               },
                               child: Text('+ Nuevo egreso',
                                   style: TextStyle(

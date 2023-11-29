@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_vsn/Screens/ingresos.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class NuevoIngreso extends StatefulWidget {
@@ -33,33 +34,19 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     }
   }
 
-  void _guardarIngresoFireBase() async {
+  void _guardarIngresoFireBase(Map<String, dynamic> data) async {
     try {
       CollectionReference testCollection =
           FirebaseFirestore.instance.collection("Ingresos");
       User? user = FirebaseAuth.instance.currentUser;
-      DateTime now = DateTime.now();
-      // Convierte el valor del campo 'Monto' a un entero
-      int monto = int.tryParse(montoIngreso.text) ?? 0;
 
       if (user != null) {
-        Map<String, dynamic> data = {
-          'Monto': monto,
-          'Fecha': fechaSeleccionada != null
-              ? Timestamp.fromDate(fechaSeleccionada!)
-              : Timestamp.fromDate(DateTime.now()),
-          'Nombre': nombre.text,
-          'Frecuencia': frecuenciaSeleccionada,
-          'IdUsuario': user.uid,
-          "Categoria": categoriaSeleccionada,
-          'TipoIngreso': tipoIngreso
-        };
-
+        data['IdUsuario'] = user.uid;
         await testCollection.add(data);
-        print("Egreso agregado exitosamente");
+        print("ingreso agregado exitosamente");
       }
     } catch (e) {
-      print("Error al agregar el egreso: $e");
+      print("Error al agregar el ingreso: $e");
     }
   }
 
@@ -94,7 +81,7 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
           backgroundColor: Colors.white,
           leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, null);
             },
             icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
           ),
@@ -176,8 +163,31 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                           minWidth: double.infinity,
                           height: 60,
                           onPressed: () {
-                            Navigator.pop(context);
-                            _guardarIngresoFireBase();
+                            int monto = int.tryParse(montoIngreso.text) ?? 0;
+
+                            Map<String, dynamic> data = {
+                              'Monto': monto,
+                              'Fecha': fechaSeleccionada != null
+                                  ? Timestamp.fromDate(fechaSeleccionada!)
+                                  : Timestamp.fromDate(DateTime.now()),
+                              'Nombre': nombre.text,
+                              'Frecuencia': frecuenciaSeleccionada,
+                              "Categoria": categoriaSeleccionada,
+                              'TipoIngreso': tipoIngreso
+                            };
+                            Navigator.pop(
+                                context,
+                                Ingreso(
+                                    Categoria: categoriaSeleccionada,
+                                    Fecha: fechaSeleccionada != null
+                                        ? fechaSeleccionada!
+                                        : DateTime.now(),
+                                    Frecuencia: frecuenciaSeleccionada,
+                                    IdUsuario: '',
+                                    Monto: monto.toDouble(),
+                                    Nombre: nombre.text,
+                                    TipoIngrso: tipoIngreso));
+                            _guardarIngresoFireBase(data);
                           },
                           color: themeState
                               .themeData.colorScheme.onPrimaryContainer,

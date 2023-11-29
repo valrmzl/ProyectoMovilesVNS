@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:proyecto_vsn/Screens/gastos.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 import 'package:proyecto_vsn/firebase_options.dart';
 
@@ -37,7 +38,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
     }
   }
 
-  void _guardarEgresoFireBase() async {
+  void _guardarEgresoFireBase(Map<String, dynamic> data) async {
     try {
       // Obtener el usuario actualmente autenticado
       User? user = FirebaseAuth.instance.currentUser;
@@ -48,20 +49,9 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
         CollectionReference egresosCollection =
             FirebaseFirestore.instance.collection("Egresos");
 
-        DateTime now = DateTime.now();
         int monto = int.tryParse(montoEgreso.text) ?? 0;
 
-        Map<String, dynamic> data = {
-          'Categoria': categoriaSeleccionada,
-          'Fecha': fechaSeleccionada != null
-              ? Timestamp.fromDate(fechaSeleccionada!)
-              : Timestamp.fromDate(DateTime.now()),
-          'Frecuencia': frecuenciaSeleccionada,
-          'IdUsuario': user.uid, // Usar el UID del usuario autenticado
-          'MedioPago': recibidoSeleccionado,
-          'Monto': monto,
-          'Nombre': nombre.text,
-        };
+        data['IdUsuario'] = user.uid;
 
         await egresosCollection.add(data);
         print("Egreso agregado exitosamente");
@@ -112,7 +102,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
             backgroundColor: Colors.white,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, null);
               },
               icon: Icon(Icons.arrow_back_ios, size: 20, color: Colors.black),
             ),
@@ -194,8 +184,31 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                             minWidth: double.infinity,
                             height: 60,
                             onPressed: () {
-                              Navigator.pop(context);
-                              _guardarEgresoFireBase();
+                              int monto = int.tryParse(montoEgreso.text) ?? 0;
+
+                              Map<String, dynamic> data = {
+                                'Monto': monto,
+                                'Fecha': fechaSeleccionada != null
+                                    ? Timestamp.fromDate(fechaSeleccionada!)
+                                    : Timestamp.fromDate(DateTime.now()),
+                                'Nombre': nombre.text,
+                                'Frecuencia': frecuenciaSeleccionada,
+                                "Categoria": categoriaSeleccionada,
+                                'MedioPago': recibidoSeleccionado,
+                              };
+                              Navigator.pop(
+                                  context,
+                                  Egreso(
+                                      Categoria: categoriaSeleccionada,
+                                      Fecha: fechaSeleccionada != null
+                                          ? fechaSeleccionada!
+                                          : DateTime.now(),
+                                      Frecuencia: frecuenciaSeleccionada,
+                                      IdUsuario: '',
+                                      Monto: monto.toDouble(),
+                                      Nombre: nombre.text,
+                                      MedioPago: recibidoSeleccionado));
+                              _guardarEgresoFireBase(data);
                             },
                             color: themeState.themeData.colorScheme.secondary,
                             elevation: 0,

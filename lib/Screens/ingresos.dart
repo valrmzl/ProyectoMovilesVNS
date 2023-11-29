@@ -176,11 +176,18 @@ class _IngresosState extends State<Ingresos> {
                           Padding(
                             padding: const EdgeInsets.only(right: 20.0),
                             child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                var result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => NuevoIngreso()));
+                                if (result != null) {
+                                  setState(() {
+                                    items.add(result);
+                                    print('items:');
+                                    print(items);
+                                  });
+                                }
                               },
                               child: Text('+ Nuevo ingreso',
                                   style: TextStyle(
