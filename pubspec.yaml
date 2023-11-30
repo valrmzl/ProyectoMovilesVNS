@@ -76,6 +76,12 @@ flutter:
         - assets/images/imagen1.jpeg
         - assets/images/imagen2.jpeg
         - assets/images/imagen3.jpeg
+        - assets/images/1.png
+        - assets/images/2.png
+        - assets/images/3.png
+        - assets/images/4.png
+        - assets/images/5.png
+
         - lib/data/
     #   - images/a_dot_ham.jpeg
 

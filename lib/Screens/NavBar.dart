@@ -79,16 +79,19 @@ class _NavBarState extends State<NavBar> {
                         UserAccountsDrawerHeader(
                           accountName: Text(currentUser?.displayName ?? 'null'),
                           accountEmail: Text(currentUser?.email ?? 'null'),
-                          currentAccountPicture: CircleAvatar(
-                            child: ClipOval(
-                              child: Image.network(
-                                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80",
-                                width: 90,
-                                height: 90,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                        currentAccountPicture: CircleAvatar(
+                          radius: 45,
+                          child: ClipOval(
+                            child: currentUser?.photoURL != null
+                                ? Image.asset(
+                                    "assets/images/${currentUser?.photoURL}.png",
+                                    width: 90,
+                                    height: 90,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(), // Add a placeholder or default image if photoURL is null
                           ),
+                        ),
                           decoration: BoxDecoration(
                             color: themeState.themeData.colorScheme
                                 .secondary, // Color del tema
