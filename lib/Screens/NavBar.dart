@@ -67,6 +67,10 @@ class _NavBarState extends State<NavBar> {
           } else {
             return BlocBuilder<ThemeBloc, ThemeState>(
               builder: (context, themeState) {
+                isSwitched =
+                    themeState.themeData.toString() == 'ThemeData#0b03e'
+                        ? true
+                        : false;
                 return Drawer(
                   child: Container(
                     color: themeState.themeData.colorScheme.primaryContainer,
@@ -113,7 +117,22 @@ class _NavBarState extends State<NavBar> {
                               style: TextStyle(
                                   color: themeState.themeData.colorScheme
                                       .onPrimaryContainer)),
-                          trailing: Switch(
+                          trailing:
+                              // IconButton(
+                              //   icon: Icon(Icons.color_lens),
+                              //   onPressed: () {
+                              //     setState(() {
+                              //       BlocProvider.of<ThemeBloc>(context).add(
+                              //         ThemeChangedEvent(
+                              //           theme: isSwitched
+                              //               ? AppTheme.DarkApp
+                              //               : AppTheme.LightApp,
+                              //         ),
+                              //       );
+                              //     });
+                              //   },
+                              // )
+                              Switch(
                             value: isSwitched,
                             onChanged: (value) {
                               setState(() {
@@ -127,6 +146,7 @@ class _NavBarState extends State<NavBar> {
                                 );
                                 print("aqui");
                                 print(isSwitched);
+                                print(themeState.themeData);
                               });
                             },
                           ),
