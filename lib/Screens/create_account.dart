@@ -28,8 +28,9 @@ class _CreateAccountState extends State<CreateAccount> {
               password: _passwordController.text.trim());
 
       User? user = userCred.user;
-      await user!.updateDisplayName(
-          _nombreController.text.trim() + _apellidoController.text.trim());
+      await user!.updateDisplayName(_nombreController.text.trim() +
+          ' ' +
+          _apellidoController.text.trim());
       //añadir otros detalles
       addUserDetails(
           _nombreController.text.trim(),
