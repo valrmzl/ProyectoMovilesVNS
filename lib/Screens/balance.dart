@@ -382,12 +382,14 @@ class _BalanceState extends State<Balance> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 16,
-                                    color: Colors.black)),
+                                    color: themeState
+                                        .themeData.colorScheme.onBackground)),
                             Text(currentUser?.displayName ?? 'null',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 20,
-                                    color: Colors.black)),
+                                    color: themeState
+                                        .themeData.colorScheme.onBackground)),
                           ],
                         ),
                       )
