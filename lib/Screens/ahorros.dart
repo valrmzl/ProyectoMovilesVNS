@@ -102,8 +102,7 @@ class _AhorrosState extends State<Ahorros> {
       future: loadJsonData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show a loading indicator.
-        } else if (snapshot.hasError) {
+          return Center(child: CircularProgressIndicator());        } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           items = snapshot.data!;

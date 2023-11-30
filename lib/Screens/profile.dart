@@ -8,15 +8,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Lista de países para el Dropdown
-  List<String> countries = [
-    "México",
-    "Estados Unidos",
-    "Canadá",
-    "España",
-    "Argentina"
-  ];
-
   User? currentUser;
 
   Future<dynamic> getData() async {
@@ -24,7 +15,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Variable para controlar el valor seleccionado del Dropdown
-  String selectedCountry = "México";
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // While data is being fetched, display a loading indicator or placeholder
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 // Handle errors
                 return Text('Error: ${snapshot.error}');
@@ -114,35 +104,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildInfoCard(Icons.email, currentUser?.email ?? 'null',
                         Color.fromARGB(255, 47, 125, 121)),
                     const SizedBox(height: 16),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      elevation: 4,
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.flag,
-                          color: Color.fromARGB(255, 47, 125, 121),
-                        ),
-                        title: Text("Divisa"),
-                        trailing: DropdownButton<String>(
-                          value: selectedCountry,
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              setState(() {
-                                selectedCountry = newValue;
-                              });
-                            }
-                          },
-                          items: countries.map((String country) {
-                            return DropdownMenuItem<String>(
-                              value: country,
-                              child: Text(country),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
                   ],
                 );
               }

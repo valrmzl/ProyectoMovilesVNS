@@ -27,8 +27,6 @@ class _NavBarState extends State<NavBar> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => LoginPage(),
     ));
-
-
   }
 
   Future<dynamic> getData() async {
@@ -62,7 +60,7 @@ class _NavBarState extends State<NavBar> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While data is being fetched, display a loading indicator or placeholder
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             // Handle errors
             return Text('Error: ${snapshot.error}');
@@ -127,6 +125,8 @@ class _NavBarState extends State<NavBar> {
                                         : AppTheme.LightApp,
                                   ),
                                 );
+                                print("aqui");
+                                print(isSwitched);
                               });
                             },
                           ),

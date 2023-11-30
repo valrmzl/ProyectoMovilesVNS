@@ -158,7 +158,7 @@ class _BalanceState extends State<Balance> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is being fetched, display a loading indicator or placeholder
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // Handle errors
           return Text('Error: ${snapshot.error}');

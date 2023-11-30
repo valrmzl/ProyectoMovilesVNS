@@ -13,5 +13,7 @@ class ThemeChangedEvent extends ThemeEvent {
   ThemeChangedEvent({required this.theme});
 
   @override
-  List<Object> get props => [theme];
+  List<Object> get props => [
+        theme,
+      ];
 }
