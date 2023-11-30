@@ -77,7 +77,6 @@ flutter:
         - assets/images/imagen1.jpeg
         - assets/images/imagen2.jpeg
         - assets/images/imagen3.jpeg
-        - assets/animationMoney.json
         - lib/data/
     #   - images/a_dot_ham.jpeg
 

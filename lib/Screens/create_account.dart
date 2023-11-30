@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,31 +14,38 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-  //text controllers
+  // Text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
   final _nombreController = TextEditingController();
   final _apellidoController = TextEditingController();
 
-  Future SignUp() async {
+  // Variable to track the selected image
+  String selectedImage = '';
+
+  // Variable to track the number of the selected avatar
+  int selectedAvatarNumber = 0;
+
+  Future signUp() async {
     if (confirmasPassword()) {
-      //se crea el usuario
+      // Create the user
       UserCredential userCred = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim());
 
       User? user = userCred.user;
-      await user!.updateDisplayName(_nombreController.text.trim() +
-          ' ' +
-          _apellidoController.text.trim());
-      //añadir otros detalles
+      await user!.updateDisplayName(
+          _nombreController.text.trim() + _apellidoController.text.trim());
+      await user!.updatePhotoURL(
+          selectedAvatarNumber.toString());
+      // Add other details
       addUserDetails(
           _nombreController.text.trim(),
           _apellidoController.text.trim(),
           _emailController.text.trim(),
-          _passwordController.text.trim());
+          _passwordController.text.trim(),selectedAvatarNumber);
     }
 
     bool signInSuccess = await signUserIn(context);
@@ -57,30 +66,32 @@ class _CreateAccountState extends State<CreateAccount> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      // Inicio de sesión exitoso
+      // Successful login
       return true;
     } catch (e) {
-      // Manejo de errores
-      print("Error durante el inicio de sesión: $e");
-      // Muestra un SnackBar con el mensaje de error
+      // Error handling
+      print("Error during login: $e");
+      // Show a SnackBar with the error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Error durante el inicio de sesión: $e"),
+          content: Text("Error during login: $e"),
         ),
       );
-      // Inicio de sesión fallido
+      // Login failed
       return false;
     }
-    print('se inicia sesion');
+    print('Login successful');
   }
 
   Future addUserDetails(
-      String nombre, String apellido, String email, String password) async {
+      String nombre, String apellido, String email, String password, avatar) async {
     await FirebaseFirestore.instance.collection("Users").add({
       'Nombre': nombre,
       'Apellido': apellido,
       'Email': email,
-      'Password': password
+      'Password': password,
+      'Avatar' : avatar
+      
     });
   }
 
@@ -102,116 +113,181 @@ class _CreateAccountState extends State<CreateAccount> {
         elevation: 0,
         backgroundColor: Colors.white,
       ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        "Sign up",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Crea una cuenta",
-                        style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Column(
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
                       children: <Widget>[
-                        makeInput(
-                            label: "Nombre ", controller: _nombreController),
-                        makeInput(
-                            label: "Apellido ",
-                            controller: _apellidoController),
-                        makeInput(label: "Email", controller: _emailController),
-                        makeInput(
-                            label: "Password",
-                            obscureText: true,
-                            controller: _passwordController),
-                        makeInput(
-                            label: "Confirmar password",
-                            obscureText: true,
-                            controller: _confirmpasswordController),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 3, left: 3),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border(
-                            bottom: BorderSide(color: Colors.black),
-                            top: BorderSide(color: Colors.black),
-                            left: BorderSide(color: Colors.black),
-                            right: BorderSide(color: Colors.black),
-                          )),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
-                        onPressed: () async {
-                          await SignUp();
-                        },
-                        color: Color.fromARGB(255, 184, 243, 223),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Text(
+                        Text(
                           "Sign up",
                           style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                         ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          "Create an account",
+                          style:
+                              TextStyle(fontSize: 15, color: Colors.grey[700]),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        children: <Widget>[
+                          makeInput(
+                              label: "Nombre ", controller: _nombreController),
+                          makeInput(
+                              label: "Apellido ",
+                              controller: _apellidoController),
+                          makeInput(
+                              label: "Email", controller: _emailController),
+                          makeInput(
+                              label: "Password",
+                              obscureText: true,
+                              controller: _passwordController),
+                          makeInput(
+                              label: "Confirm Password",
+                              obscureText: true,
+                              controller: _confirmpasswordController),
+                        ],
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("¿Ya tienes una cuenta?   ",
-                          style: TextStyle(color: Colors.black)),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          // Navegar a la página de inicio (HomePage)
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          "Login",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            color: Colors
-                                .black, // Cambia el color del texto si lo deseas
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AvatarImage(
+                          image: 'images/1.png',
+                          isSelected: selectedImage == 'images/1.png',
+                          avatarNumber: 1,
+                          onTap: (number) {
+                            setState(() {
+                              selectedImage = 'images/1.png';
+                              selectedAvatarNumber = number;
+                            });
+                          },
+                        ),
+                        AvatarImage(
+                          image: 'images/2.png',
+                          isSelected: selectedImage == 'images/2.png',
+                          avatarNumber: 2,
+                          onTap: (number) {
+                            setState(() {
+                              selectedImage = 'images/2.png';
+                              selectedAvatarNumber = number;
+                            });
+                          },
+                        ),
+                        AvatarImage(
+                          image: 'images/3.png',
+                          isSelected: selectedImage == 'images/3.png',
+                          avatarNumber: 3,
+                          onTap: (number) {
+                            setState(() {
+                              selectedImage = 'images/3.png';
+                              selectedAvatarNumber = number;
+                            });
+                          },
+                        ),
+                        AvatarImage(
+                          image: 'images/4.png',
+                          isSelected: selectedImage == 'images/4.png',
+                          avatarNumber: 4,
+                          onTap: (number) {
+                            setState(() {
+                              selectedImage = 'images/4.png';
+                              selectedAvatarNumber = number;
+                            });
+                          },
+                        ),
+                        AvatarImage(
+                          image: 'images/5.png',
+                          isSelected: selectedImage == 'images/5.png',
+                          avatarNumber: 5,
+                          onTap: (number) {
+                            setState(() {
+                              selectedImage = 'images/5.png';
+                              selectedAvatarNumber = number;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Container(
+                        padding: EdgeInsets.only(top: 3, left: 3),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            border: Border(
+                              bottom: BorderSide(color: Colors.black),
+                              top: BorderSide(color: Colors.black),
+                              left: BorderSide(color: Colors.black),
+                              right: BorderSide(color: Colors.black),
+                            )),
+                        child: MaterialButton(
+                          minWidth: double.infinity,
+                          height: 60,
+                          onPressed: () async {
+                            await signUp();
+                            print("hola");
+                          },
+                          color: Color.fromARGB(255, 184, 243, 223),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50)),
+                          child: Text(
+                            "Sign up",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 18),
                           ),
                         ),
                       ),
-                    ],
-                  )
-                ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text("Already have an account?   ",
+                            style: TextStyle(color: Colors.black)),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            // Navigate to the login page
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -246,6 +322,45 @@ class _CreateAccountState extends State<CreateAccount> {
           height: 30,
         ),
       ],
+    );
+  }
+}
+
+class AvatarImage extends StatelessWidget {
+  final String image;
+  final bool isSelected;
+  final int avatarNumber;
+  final Function(int) onTap;
+
+  AvatarImage({
+    required this.image,
+    required this.isSelected,
+    required this.avatarNumber,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onTap(avatarNumber),
+      child: Container(
+        margin: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected ? Colors.red : Colors.blue,
+            width: 2,
+          ),
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            'assets/$image',
+            width: 80,
+            height: 80,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
     );
   }
 }
