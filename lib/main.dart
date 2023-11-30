@@ -7,7 +7,7 @@ import 'package:proyecto_vsn/Screens/login_page.dart';
 import 'package:proyecto_vsn/Screens/home_page.dart';
 import 'package:proyecto_vsn/Screens/welcome.dart';
 import 'package:proyecto_vsn/Screens/calendar.dart';
-import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
+import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart'; 
 
 import 'firebase_options.dart';
 

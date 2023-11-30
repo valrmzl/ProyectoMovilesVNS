@@ -25,7 +25,7 @@ class Ahorro {
     required this.origen,
     required this.fecha,
     required this.progreso,
-    required this.IdUsuario
+    required this.IdUsuario,
   });
 
 
@@ -53,7 +53,7 @@ class Ahorro {
         origen: '',
         meta: 0.0,
         nombre: '',
-        progreso: 4.0
+        progreso: 4.0,
       );
     }
   }
