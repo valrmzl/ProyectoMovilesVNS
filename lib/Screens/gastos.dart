@@ -13,7 +13,6 @@ import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 class Egreso {
   final String Categoria;
   final DateTime Fecha;
-  final String Frecuencia;
   final String IdUsuario;
   final String MedioPago;
   final double Monto;
@@ -22,7 +21,6 @@ class Egreso {
   Egreso({
     required this.Categoria,
     required this.Fecha,
-    required this.Frecuencia,
     required this.IdUsuario,
     required this.MedioPago,
     required this.Monto,
@@ -36,7 +34,6 @@ class Egreso {
       return Egreso(
         Categoria: data['Categoria'] ?? '',
         Fecha: data['Fecha'].toDate() ?? DateTime.now(),
-        Frecuencia: data['Frecuencia'] ?? '',
         IdUsuario: data['IdUsuario'].toString() ?? '',
         MedioPago: data['MedioPago'] ?? '',
         Monto: (data['Monto'] ?? 0.0).toDouble(),
@@ -48,7 +45,6 @@ class Egreso {
       return Egreso(
         Categoria: 'Error',
         Fecha: DateTime.now(),
-        Frecuencia: '',
         IdUsuario: "1",
         MedioPago: '',
         Monto: 0.0,

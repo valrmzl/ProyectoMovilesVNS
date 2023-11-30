@@ -17,7 +17,6 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
   final nombre = TextEditingController();
   String tipoIngreso = 'Efecitvo';
   String categoriaSeleccionada = 'Salario';
-  String frecuenciaSeleccionada = 'Sin frecuencia';
   DateTime? fechaSeleccionada; // Variable para almacenar la fecha seleccionada.
 
   Future<void> _selectDate(BuildContext context) async {
@@ -61,13 +60,7 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     ];
     String categoriaSeleccionada = 'Salario';
 
-    List<String> frecuencia = [
-      'Sin frecuencia',
-      'Semanal',
-      'Quincenal',
-      'Mensual'
-    ];
-    String frecuenciaSeleccionada = 'Sin frecuencia';
+    
 
     List<String> recibido = ['Efectivo', 'Transferencia'];
     String recibidoSeleccionado = 'Efectivo';
@@ -131,22 +124,15 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                               label: "¿El ingreso lo recibiste en?",
                               options: recibido,
                               selectedValue: recibidoSeleccionado,
-                              onValueChanged: (String? newValue) {
+                              onValueChanged: (newValue) {
                                 recibidoSeleccionado = newValue!;
                               }),
                           makeDropdown(
                               label: "Categoría de tu ingreso",
                               options: categorias,
                               selectedValue: categoriaSeleccionada,
-                              onValueChanged: (String? newValue) {
+                              onValueChanged: (newValue) {
                                 categoriaSeleccionada = newValue!;
-                              }),
-                          makeDropdown(
-                              label: "¿Cada cuanto te llega este ingreso?",
-                              options: frecuencia,
-                              selectedValue: frecuenciaSeleccionada,
-                              onValueChanged: (String? newValue) {
-                                frecuenciaSeleccionada = newValue!;
                               }),
                           TextFormField(
                             onTap: () async {
@@ -192,7 +178,6 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                                   ? Timestamp.fromDate(fechaSeleccionada!)
                                   : Timestamp.fromDate(DateTime.now()),
                               'Nombre': nombre.text,
-                              'Frecuencia': frecuenciaSeleccionada,
                               "Categoria": categoriaSeleccionada,
                               'TipoIngreso': recibidoSeleccionado
                             };
@@ -203,7 +188,6 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                                     Fecha: fechaSeleccionada != null
                                         ? fechaSeleccionada!
                                         : DateTime.now(),
-                                    Frecuencia: frecuenciaSeleccionada,
                                     IdUsuario: '',
                                     Monto: monto.toDouble(),
                                     Nombre: nombre.text,
@@ -277,57 +261,6 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     );
   }
 
-//   Widget makeDropdown(
-//       {String? label, List<String> options = const [], String? selectedValue}) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: <Widget>[
-//         Text(
-//           label ?? '',
-//           style: TextStyle(
-//             fontSize: 15,
-//             fontWeight: FontWeight.w400,
-//             color: Colors.black87,
-//           ),
-//         ),
-//         SizedBox(
-//           height: 5,
-//         ),
-//         Container(
-//           decoration: BoxDecoration(
-//             border: Border.all(color: Colors.grey),
-//             borderRadius: BorderRadius.circular(5),
-//           ),
-//           child: DropdownButtonFormField<String>(
-//             value: selectedValue,
-//             onChanged: (newValue) {
-//               setState(() {
-//                 selectedValue = newValue;
-//               });
-//             },
-//             items: options.map((option) {
-//               return DropdownMenuItem<String>(
-//                 value: option,
-//                 child: Text(option),
-//               );
-//             }).toList(),
-//             decoration: InputDecoration(
-//               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-//               enabledBorder: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Colors.transparent),
-//               ),
-//               border: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Colors.transparent),
-//               ),
-//             ),
-//           ),
-//         ),
-//         SizedBox(
-//           height: 10,
-//         ),
-//       ],
-//     );
-//   }
 }
 
 Widget makeDropdown({

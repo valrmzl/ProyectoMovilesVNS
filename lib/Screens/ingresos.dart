@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,6 @@ import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 class Ingreso {
   final String Categoria;
   final DateTime Fecha;
-  final String Frecuencia;
   final String IdUsuario;
   final double Monto;
   final String Nombre;
@@ -22,7 +22,6 @@ class Ingreso {
   Ingreso({
     required this.Categoria,
     required this.Fecha,
-    required this.Frecuencia,
     required this.IdUsuario,
     required this.Monto,
     required this.Nombre,
@@ -36,7 +35,6 @@ class Ingreso {
       return Ingreso(
           Categoria: data['Categoria'] ?? '',
           Fecha: data['Fecha'].toDate() ?? DateTime.now(),
-          Frecuencia: data['Frecuencia'] ?? '',
           IdUsuario: data['IdUsuario'].toString() ?? '',
           Monto: (data['Monto'] ?? 0.0).toDouble(),
           Nombre: data['Nombre'] ?? '',
@@ -47,7 +45,6 @@ class Ingreso {
       return Ingreso(
         Categoria: 'Error',
         Fecha: DateTime.now(),
-        Frecuencia: '',
         IdUsuario: '1',
         Monto: 0.0,
         Nombre: '',
@@ -140,7 +137,11 @@ class _IngresosState extends State<Ingresos> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child:CircularProgressIndicator());;
+          return Center(child:CupertinoActivityIndicator(
+
+            animating: true,
+        radius: 30.0, // Ajusta el tamaño del indicador
+          ));;
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {

@@ -79,7 +79,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               },
                               icon: Icon(
-                                Icons.camera_alt,
+                                Icons.verified_user,
                                 size: 20,
                                 color: Color.fromARGB(255, 47, 125, 121),
                               ),

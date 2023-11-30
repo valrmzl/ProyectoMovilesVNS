@@ -131,7 +131,7 @@ class _NavBarState extends State<NavBar> {
                           leading: Icon(Icons.app_settings_alt,
                               color: themeState
                                   .themeData.colorScheme.onPrimaryContainer),
-                          title: Text("Configuracion",
+                          title: Text("Información",
                               style: TextStyle(
                                   color: themeState.themeData.colorScheme
                                       .onPrimaryContainer)),

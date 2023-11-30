@@ -21,7 +21,6 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
   DateTime? fechaSeleccionada;
 
   String categoriaSeleccionada = 'Comida';
-  String frecuenciaSeleccionada = 'Sin frecuencia';
   String recibidoSeleccionado = 'Efectivo';
 
   Future<void> _selectDate(BuildContext context) async {
@@ -83,12 +82,7 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
       'Otros'
     ];
 
-    List<String> frecuencia = [
-      'Sin frecuencia',
-      'Semanal',
-      'Quincenal',
-      'Mensual',
-    ];
+   
 
     List<String> recibido = ['Efectivo', 'Crédito', 'Débito'];
 
@@ -150,13 +144,6 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                                 onValueChanged: (newValue) {
                                   categoriaSeleccionada = newValue!;
                                 }),
-                            makeDropdown(
-                                label: "¿Cada cuanto te llega este ingreso?",
-                                options: frecuencia,
-                                selectedValue: frecuenciaSeleccionada,
-                                onValueChanged: (newValue) {
-                                  frecuenciaSeleccionada = newValue!;
-                                }),
                             TextFormField(
                               onTap: () async {
                                 await _selectDate(context);
@@ -201,7 +188,6 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                                     ? Timestamp.fromDate(fechaSeleccionada!)
                                     : Timestamp.fromDate(DateTime.now()),
                                 'Nombre': nombre.text,
-                                'Frecuencia': frecuenciaSeleccionada,
                                 "Categoria": categoriaSeleccionada,
                                 'MedioPago': recibidoSeleccionado,
                               };
@@ -212,7 +198,6 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                                       Fecha: fechaSeleccionada != null
                                           ? fechaSeleccionada!
                                           : DateTime.now(),
-                                      Frecuencia: frecuenciaSeleccionada,
                                       IdUsuario: '',
                                       Monto: monto.toDouble(),
                                       Nombre: nombre.text,
