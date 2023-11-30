@@ -211,7 +211,7 @@ class _BalanceState extends State<Balance> {
         : ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
     total = total_ingresos - total_egresos;
     todos = todos + ingresos + egresos;
-    todos.sort((a, b) => a.Fecha.compareTo(b.Fecha));
+    todos.sort((a, b) => b.Fecha.compareTo(a.Fecha));
   }
 
   Future<dynamic> getDataFiltrada() async {

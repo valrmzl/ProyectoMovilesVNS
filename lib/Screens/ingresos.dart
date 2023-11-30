@@ -31,7 +31,7 @@ class Ingreso {
   factory Ingreso.fromSnapshot(DocumentSnapshot snapshot) {
     try {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-      print('Data from Firestore: $data');
+      //print('Data from Firestore: $data');
       return Ingreso(
           Categoria: data['Categoria'] ?? '',
           Fecha: data['Fecha'].toDate() ?? DateTime.now(),
@@ -139,7 +139,8 @@ class _IngresosState extends State<Ingresos> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());        } else if (snapshot.hasError) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           items = snapshot.data!;
@@ -182,11 +183,14 @@ class _IngresosState extends State<Ingresos> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => NuevoIngreso()));
+                                print('result');
+                                print(result);
                                 if (result != null) {
                                   setState(() {
+                                    print(items.length);
                                     items.insert(0, result);
                                     print('items:');
-                                    print(items);
+                                    print(items.length);
                                   });
                                 }
                               },
@@ -240,13 +244,12 @@ class _IngresosState extends State<Ingresos> {
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       return IngresoItem(
-                        titulo: items[index].Nombre,
-                        subtitulo1: items[index].Nombre,
-                        fecha: items[index]
-                            .Fecha, // Reemplaza con el valor correcto
-                        precio: items[index]
-                            .Monto, // Reemplaza con el valor correcto
-                      );
+                          titulo: items[index].Nombre,
+                          subtitulo1: items[index].Nombre,
+                          fecha: items[index].Fecha,
+                          precio: items[index].Monto,
+                          categoria: items[index].Categoria,
+                          tipoIngreso: items[index].TipoIngrso);
                     },
                   ),
                 ],

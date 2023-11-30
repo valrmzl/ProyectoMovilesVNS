@@ -139,15 +139,24 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
                             makeDropdown(
                                 label: "¿Con que medio hiciste este pago?",
                                 options: recibido,
-                                selectedValue: recibidoSeleccionado),
+                                selectedValue: recibidoSeleccionado,
+                                onValueChanged: (newValue) {
+                                  recibidoSeleccionado = newValue!;
+                                }),
                             makeDropdown(
                                 label: "Categoría de tu gasto",
                                 options: categorias,
-                                selectedValue: categoriaSeleccionada),
+                                selectedValue: categoriaSeleccionada,
+                                onValueChanged: (newValue) {
+                                  categoriaSeleccionada = newValue!;
+                                }),
                             makeDropdown(
                                 label: "¿Cada cuanto te llega este ingreso?",
                                 options: frecuencia,
-                                selectedValue: frecuenciaSeleccionada),
+                                selectedValue: frecuenciaSeleccionada,
+                                onValueChanged: (newValue) {
+                                  frecuenciaSeleccionada = newValue!;
+                                }),
                             TextFormField(
                               onTap: () async {
                                 await _selectDate(context);
@@ -271,48 +280,103 @@ class _NuevoEgresoState extends State<NuevoEgreso> {
     );
   }
 
-  Widget makeDropdown(
-      {String? label, List<String> options = const [], String? selectedValue}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          label ?? '',
-          style: TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+  // Widget makeDropdown(
+  //     {String? label, List<String> options = const [], String? selectedValue}) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: <Widget>[
+  //       Text(
+  //         label ?? '',
+  //         style: TextStyle(
+  //             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+  //       ),
+  //       SizedBox(height: 5),
+  //       Container(
+  //         decoration: BoxDecoration(
+  //           border: Border.all(color: Colors.grey),
+  //           borderRadius: BorderRadius.circular(5),
+  //         ),
+  //         child: DropdownButtonFormField<String>(
+  //           value: selectedValue,
+  //           onChanged: (newValue) {
+  //             setState(() {
+  //               selectedValue = newValue;
+  //             });
+  //           },
+  //           items: options.map((option) {
+  //             return DropdownMenuItem<String>(
+  //               value: option,
+  //               child: Text(option),
+  //             );
+  //           }).toList(),
+  //           decoration: InputDecoration(
+  //             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+  //             enabledBorder: OutlineInputBorder(
+  //               borderSide: BorderSide(color: Colors.transparent),
+  //             ),
+  //             border: OutlineInputBorder(
+  //               borderSide: BorderSide(color: Colors.transparent),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(height: 10),
+  //     ],
+  //   );
+  // }
+}
+
+Widget makeDropdown({
+  String? label,
+  List<String> options = const [],
+  String? selectedValue,
+  required void Function(String?) onValueChanged,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(
+        label ?? '',
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: Colors.black87,
         ),
-        SizedBox(height: 5),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: DropdownButtonFormField<String>(
-            value: selectedValue,
-            onChanged: (newValue) {
-              setState(() {
-                selectedValue = newValue;
-              });
-            },
-            items: options.map((option) {
-              return DropdownMenuItem<String>(
-                value: option,
-                child: Text(option),
-              );
-            }).toList(),
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
+      ),
+      SizedBox(
+        height: 5,
+      ),
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: DropdownButtonFormField<String>(
+          value: selectedValue,
+          onChanged: (newValue) {
+            // Invoke the callback provided by the parent
+            onValueChanged(newValue);
+          },
+          items: options.map((option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(option),
+            );
+          }).toList(),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
             ),
           ),
         ),
-        SizedBox(height: 10),
-      ],
-    );
-  }
+      ),
+      SizedBox(
+        height: 10,
+      ),
+    ],
+  );
 }

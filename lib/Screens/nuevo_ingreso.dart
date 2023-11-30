@@ -43,10 +43,10 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
       if (user != null) {
         data['IdUsuario'] = user.uid;
         await testCollection.add(data);
-        print("ingreso agregado exitosamente");
+        // print("ingreso agregado exitosamente");
       }
     } catch (e) {
-      print("Error al agregar el ingreso: $e");
+      //print("Error al agregar el ingreso: $e");
     }
   }
 
@@ -69,7 +69,7 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     ];
     String frecuenciaSeleccionada = 'Sin frecuencia';
 
-    List<String> recibido = ['Efectivo', 'Deposito/Transferencia'];
+    List<String> recibido = ['Efectivo', 'Transferencia'];
     String recibidoSeleccionado = 'Efectivo';
 
     return BlocBuilder<ThemeBloc, ThemeState>(builder: (context, themeState) {
@@ -115,18 +115,39 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                           makeInput(
                               label: "¿Qué nombre le quieres dar? ",
                               controller: nombre),
+                          // makeDropdown(
+                          //     label: "¿El ingreso lo recibiste en?",
+                          //     options: recibido,
+                          //     selectedValue: recibidoSeleccionado),
+                          // makeDropdown(
+                          //     label: "Categoría de tu ingreso",
+                          //     options: categorias,
+                          //     selectedValue: categoriaSeleccionada),
+                          // makeDropdown(
+                          //     label: "¿Cada cuanto te llega este ingreso?",
+                          //     options: frecuencia,
+                          //     selectedValue: frecuenciaSeleccionada),
                           makeDropdown(
                               label: "¿El ingreso lo recibiste en?",
                               options: recibido,
-                              selectedValue: recibidoSeleccionado),
+                              selectedValue: recibidoSeleccionado,
+                              onValueChanged: (String? newValue) {
+                                recibidoSeleccionado = newValue!;
+                              }),
                           makeDropdown(
                               label: "Categoría de tu ingreso",
                               options: categorias,
-                              selectedValue: categoriaSeleccionada),
+                              selectedValue: categoriaSeleccionada,
+                              onValueChanged: (String? newValue) {
+                                categoriaSeleccionada = newValue!;
+                              }),
                           makeDropdown(
                               label: "¿Cada cuanto te llega este ingreso?",
                               options: frecuencia,
-                              selectedValue: frecuenciaSeleccionada),
+                              selectedValue: frecuenciaSeleccionada,
+                              onValueChanged: (String? newValue) {
+                                frecuenciaSeleccionada = newValue!;
+                              }),
                           TextFormField(
                             onTap: () async {
                               await _selectDate(context);
@@ -173,7 +194,7 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                               'Nombre': nombre.text,
                               'Frecuencia': frecuenciaSeleccionada,
                               "Categoria": categoriaSeleccionada,
-                              'TipoIngreso': tipoIngreso
+                              'TipoIngreso': recibidoSeleccionado
                             };
                             Navigator.pop(
                                 context,
@@ -186,7 +207,9 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
                                     IdUsuario: '',
                                     Monto: monto.toDouble(),
                                     Nombre: nombre.text,
-                                    TipoIngrso: tipoIngreso));
+                                    TipoIngrso: recibidoSeleccionado));
+                            print('data');
+                            print(categoriaSeleccionada);
                             _guardarIngresoFireBase(data);
                           },
                           color: themeState
@@ -254,55 +277,110 @@ class _NuevoIngresoState extends State<NuevoIngreso> {
     );
   }
 
-  Widget makeDropdown(
-      {String? label, List<String> options = const [], String? selectedValue}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          label ?? '',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: Colors.black87,
-          ),
+//   Widget makeDropdown(
+//       {String? label, List<String> options = const [], String? selectedValue}) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: <Widget>[
+//         Text(
+//           label ?? '',
+//           style: TextStyle(
+//             fontSize: 15,
+//             fontWeight: FontWeight.w400,
+//             color: Colors.black87,
+//           ),
+//         ),
+//         SizedBox(
+//           height: 5,
+//         ),
+//         Container(
+//           decoration: BoxDecoration(
+//             border: Border.all(color: Colors.grey),
+//             borderRadius: BorderRadius.circular(5),
+//           ),
+//           child: DropdownButtonFormField<String>(
+//             value: selectedValue,
+//             onChanged: (newValue) {
+//               setState(() {
+//                 selectedValue = newValue;
+//               });
+//             },
+//             items: options.map((option) {
+//               return DropdownMenuItem<String>(
+//                 value: option,
+//                 child: Text(option),
+//               );
+//             }).toList(),
+//             decoration: InputDecoration(
+//               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+//               enabledBorder: OutlineInputBorder(
+//                 borderSide: BorderSide(color: Colors.transparent),
+//               ),
+//               border: OutlineInputBorder(
+//                 borderSide: BorderSide(color: Colors.transparent),
+//               ),
+//             ),
+//           ),
+//         ),
+//         SizedBox(
+//           height: 10,
+//         ),
+//       ],
+//     );
+//   }
+}
+
+Widget makeDropdown({
+  String? label,
+  List<String> options = const [],
+  String? selectedValue,
+  required void Function(String?) onValueChanged,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      Text(
+        label ?? '',
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: Colors.black87,
         ),
-        SizedBox(
-          height: 5,
+      ),
+      SizedBox(
+        height: 5,
+      ),
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(5),
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: DropdownButtonFormField<String>(
-            value: selectedValue,
-            onChanged: (newValue) {
-              setState(() {
-                selectedValue = newValue;
-              });
-            },
-            items: options.map((option) {
-              return DropdownMenuItem<String>(
-                value: option,
-                child: Text(option),
-              );
-            }).toList(),
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
+        child: DropdownButtonFormField<String>(
+          value: selectedValue,
+          onChanged: (newValue) {
+            // Invoke the callback provided by the parent
+            onValueChanged(newValue);
+          },
+          items: options.map((option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(option),
+            );
+          }).toList(),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
             ),
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
+      ),
+      SizedBox(
+        height: 10,
+      ),
+    ],
+  );
 }

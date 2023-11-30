@@ -149,7 +149,8 @@ class _EgresosState extends State<Egresos> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());        } else if (snapshot.hasError) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           items = snapshot.data!;
@@ -251,13 +252,12 @@ class _EgresosState extends State<Egresos> {
                       print(
                           'Item data: ${items[index].Nombre}, ${items[index].Fecha}, ${items[index].Monto}');
                       return EgresoItem(
-                        titulo: items[index].Nombre,
-                        subtitulo1: items[index].Nombre,
-                        fecha: items[index]
-                            .Fecha, // Reemplaza con el valor correcto
-                        precio: items[index]
-                            .Monto, // Reemplaza con el valor correcto
-                      );
+                          titulo: items[index].Nombre,
+                          subtitulo1: items[index].Nombre,
+                          fecha: items[index].Fecha,
+                          precio: items[index].Monto,
+                          categoria: items[index].Categoria,
+                          tipoEgreso: items[index].MedioPago);
                     },
                   ),
                 ],

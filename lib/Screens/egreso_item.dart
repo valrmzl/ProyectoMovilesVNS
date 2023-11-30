@@ -7,42 +7,45 @@ class EgresoItem extends StatelessWidget {
   final String subtitulo1;
   final DateTime fecha;
   final double precio;
+  final String categoria;
+  final String tipoEgreso;
 
-  EgresoItem({
-    required this.titulo,
-    required this.subtitulo1,
-    required this.fecha,
-    required this.precio,
-  }) {
+  EgresoItem(
+      {required this.titulo,
+      required this.subtitulo1,
+      required this.fecha,
+      required this.precio,
+      required this.categoria,
+      required this.tipoEgreso}) {
     print('subtitulo' + this.precio.toString());
   }
 
   String getMonthName(int month) {
     switch (month) {
       case 1:
-        return "January";
+        return "Jan";
       case 2:
-        return "February";
+        return "Feb";
       case 3:
-        return "March";
+        return "Mar";
       case 4:
-        return "April";
+        return "Apr";
       case 5:
         return "May";
       case 6:
-        return "June";
+        return "Jun";
       case 7:
-        return "July";
+        return "Jul";
       case 8:
-        return "August";
+        return "Aug";
       case 9:
-        return "September";
+        return "Sep";
       case 10:
-        return "October";
+        return "Oct";
       case 11:
-        return "November";
+        return "Nov";
       case 12:
-        return "December";
+        return "Dec";
       default:
         return "Invalid Month";
     }
@@ -74,11 +77,11 @@ class EgresoItem extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            categoriaChip("Salario",
+                            categoriaChip(categoria,
                                 const Color.fromARGB(255, 229, 132, 164)),
                             SizedBox(width: 8), // Espacio entre chips
-                            categoriaChip("Transferencia",
-                                Color.fromARGB(255, 226, 228, 136)),
+                            categoriaChip(
+                                tipoEgreso, Color.fromARGB(255, 226, 228, 136)),
                           ],
                         ),
                         Text(
