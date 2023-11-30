@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:proyecto_vsn/Screens/ingreso_item.dart';
 import 'package:proyecto_vsn/Screens/nuevo_ingreso.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
@@ -139,7 +140,7 @@ class _IngresosState extends State<Ingresos> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child:CircularProgressIndicator());;
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {

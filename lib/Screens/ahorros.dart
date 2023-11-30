@@ -10,6 +10,7 @@ import 'package:proyecto_vsn/Screens/nueva_meta.dart';
 import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 class Ahorro {
+  final String id;
   final String nombre;
   final double meta;
   final String origen;
@@ -18,6 +19,7 @@ class Ahorro {
   final String IdUsuario;
 
   Ahorro({
+    required this.id,
     required this.nombre,
     required this.meta,
     required this.origen,
@@ -32,17 +34,20 @@ class Ahorro {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       print('Data from Firestore: $data');
       return Ahorro(
+        id: snapshot.id, 
         fecha: data['Fecha'].toDate() ?? DateTime.now(),
         IdUsuario: data['IdUsuario'].toString() ?? '',
         meta: (data['Monto'] ?? 0.0).toDouble(),
         nombre: data['Nombre'] ?? '',
         origen: data['Origen'] ?? '',
         progreso: data['Progreso'] ?? '',
+
       );
     } catch (e, stackTrace) {
       print('Error creating Egreso from snapshot: $e');
       print('Stack trace: $stackTrace');
       return Ahorro(
+        id: '',
         fecha: DateTime.now(),
         IdUsuario: "1",
         origen: '',

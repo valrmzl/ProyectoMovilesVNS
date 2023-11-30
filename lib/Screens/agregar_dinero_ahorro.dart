@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 
 class AgregarDineroAhorro extends StatefulWidget {
-  const AgregarDineroAhorro({super.key});
+  final String documentoId;
+
+  const AgregarDineroAhorro({required this.documentoId, Key? key}) : super(key: key);
 
   @override
   State<AgregarDineroAhorro> createState() => _AgregarDineroAhorroState();
 }
 
 class _AgregarDineroAhorroState extends State<AgregarDineroAhorro> {
+   @override
+  void initState() {
+    super.initState();
+    
+    // Imprimir el ID del documento en la consola
+    print('ID del Documento: ${widget.documentoId}');
+  }
+   TextEditingController _amountController = TextEditingController();
   List<String> monthsOfYear = [
     'January',
     'February',

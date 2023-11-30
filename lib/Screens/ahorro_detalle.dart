@@ -26,7 +26,7 @@ class _AhorroDetalleState extends State<AhorroDetalle> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AgregarDineroAhorro()),
+                        builder: (context) => AgregarDineroAhorro(documentoId: widget.data.id)),
                   );
                 },
                 child: Text('+ Agregar dinero',
