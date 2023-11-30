@@ -79,23 +79,53 @@ class _NavBarState extends State<NavBar> {
                         UserAccountsDrawerHeader(
                           accountName: Text(currentUser?.displayName ?? 'null'),
                           accountEmail: Text(currentUser?.email ?? 'null'),
-                        currentAccountPicture: CircleAvatar(
-                          radius: 45,
-                          child: ClipOval(
-                            child: currentUser?.photoURL != null
-                                ? Image.asset(
-                                    "assets/images/${currentUser?.photoURL}.png",
-                                    width: 90,
-                                    height: 90,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Container(), // Add a placeholder or default image if photoURL is null
+                          currentAccountPicture: CircleAvatar(
+                            radius: 45,
+                            child: ClipOval(
+                              child: currentUser?.photoURL != null
+                                  ? Image.asset(
+                                      "assets/images/${currentUser?.photoURL}.png",
+                                      width: 90,
+                                      height: 90,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Container(), // Add a placeholder or default image if photoURL is null
+                            ),
                           ),
-                        ),
                           decoration: BoxDecoration(
                             color: themeState.themeData.colorScheme
                                 .secondary, // Color del tema
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            MaterialButton(
+                              onPressed: () {
+                                setState(() {
+                                  BlocProvider.of<ThemeBloc>(context).add(
+                                    ThemeChangedEvent(theme: AppTheme.DarkApp),
+                                  );
+                                });
+                              },
+                              child: Text(
+                                'Dark Mode',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              color: Color(0xFF2F7D79),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                setState(() {
+                                  BlocProvider.of<ThemeBloc>(context).add(
+                                    ThemeChangedEvent(theme: AppTheme.LightApp),
+                                  );
+                                });
+                              },
+                              child: Text('Light Mode'),
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
                         ListTile(
                           leading: Icon(Icons.app_settings_alt,
@@ -112,48 +142,7 @@ class _NavBarState extends State<NavBar> {
                           },
                         ),
                         // Otras opciones del Drawer
-                        ListTile(
-                          leading: Icon(Icons.lightbulb_sharp,
-                              color: themeState
-                                  .themeData.colorScheme.onPrimaryContainer),
-                          title: Text("Modo Oscuro",
-                              style: TextStyle(
-                                  color: themeState.themeData.colorScheme
-                                      .onPrimaryContainer)),
-                          trailing:
-                              // IconButton(
-                              //   icon: Icon(Icons.color_lens),
-                              //   onPressed: () {
-                              //     setState(() {
-                              //       BlocProvider.of<ThemeBloc>(context).add(
-                              //         ThemeChangedEvent(
-                              //           theme: isSwitched
-                              //               ? AppTheme.DarkApp
-                              //               : AppTheme.LightApp,
-                              //         ),
-                              //       );
-                              //     });
-                              //   },
-                              // )
-                              Switch(
-                            value: isSwitched,
-                            onChanged: (value) {
-                              setState(() {
-                                isSwitched = !isSwitched;
-                                BlocProvider.of<ThemeBloc>(context).add(
-                                  ThemeChangedEvent(
-                                    theme: isSwitched
-                                        ? AppTheme.DarkApp
-                                        : AppTheme.LightApp,
-                                  ),
-                                );
-                                print("aqui");
-                                print(isSwitched);
-                                print(themeState.themeData);
-                              });
-                            },
-                          ),
-                        ),
+
                         ListTile(
                           leading: Icon(Icons.logout,
                               color: themeState
