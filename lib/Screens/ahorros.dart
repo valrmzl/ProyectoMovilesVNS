@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +15,7 @@ class Ahorro {
   final String origen;
   final DateTime fecha;
   final double progreso;
+  final String IdUsuario;
 
   Ahorro({
     required this.nombre,
@@ -20,8 +23,37 @@ class Ahorro {
     required this.origen,
     required this.fecha,
     required this.progreso,
+    required this.IdUsuario
   });
 
+
+  factory Ahorro.fromSnapshot(DocumentSnapshot snapshot) {
+    try {
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+      print('Data from Firestore: $data');
+      return Ahorro(
+        fecha: data['Fecha'].toDate() ?? DateTime.now(),
+        IdUsuario: data['IdUsuario'].toString() ?? '',
+        meta: (data['Monto'] ?? 0.0).toDouble(),
+        nombre: data['Nombre'] ?? '',
+        origen: data['Origen'] ?? '',
+        progreso: data['Progreso'] ?? '',
+      );
+    } catch (e, stackTrace) {
+      print('Error creating Egreso from snapshot: $e');
+      print('Stack trace: $stackTrace');
+      return Ahorro(
+        fecha: DateTime.now(),
+        IdUsuario: "1",
+        origen: '',
+        meta: 0.0,
+        nombre: '',
+        progreso: 4.0
+      );
+    }
+  }
+
+  /*
   factory Ahorro.fromJson(Map<String, dynamic> json) {
     return Ahorro(
       nombre: json['nombre'] as String,
@@ -29,8 +61,11 @@ class Ahorro {
       origen: json['origen'] as String,
       fecha: DateTime.parse(json['fecha']) as DateTime,
       progreso: json['progreso'].toDouble() as double,
+      IdUsuario: "aa"
     );
-  }
+  }*/
+
+
 }
 
 class Ahorros extends StatefulWidget {
@@ -44,6 +79,33 @@ class _AhorrosState extends State<Ahorros> {
   late List<Ahorro> items;
   double total = 0;
 
+   Future<List<Ahorro>> loadFirestoreData() async {
+    // Obtener el usuario actualmente autenticado
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
+    }
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Ahorros')
+          .where('IdUsuario', isEqualTo: user.uid) // Filtrar por userId
+          .get();
+
+      List<Ahorro> lista = querySnapshot.docs
+          .map((DocumentSnapshot document) => Ahorro.fromSnapshot(document))
+          .toList();
+
+      return lista;
+    } catch (e) {
+      print('Error loading data from Firebase: $e');
+      return []; // o manejar el error según tus necesidades
+    }
+  }
+
+  /*
   Future<List<Ahorro>> loadJsonData() async {
     final jsonString = await rootBundle.loadString('lib/data/ahorro.json');
     final jsonData = json.decode(jsonString);
@@ -52,12 +114,13 @@ class _AhorrosState extends State<Ahorros> {
       lista.add(Ahorro.fromJson(jsonData[i]));
     }
     return lista;
-  }
+  }*/
+
 
   @override
   void initState() {
     super.initState();
-    loadJsonData().then((loadedData) {
+    loadFirestoreData().then((loadedData) {
       setState(() {
         items = loadedData;
         total = items.map((item) => item.progreso).reduce((a, b) => a + b);
@@ -99,7 +162,7 @@ class _AhorrosState extends State<Ahorros> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Ahorro>>(
-      future: loadJsonData(),
+      future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());        } else if (snapshot.hasError) {

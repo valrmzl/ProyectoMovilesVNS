@@ -66,39 +66,9 @@ class _AgregarDineroAhorroState extends State<AgregarDineroAhorro> {
                     BorderSide(color: Color.fromARGB(255, 15, 182, 138)),
               ),
             )),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0, top: 15),
-              child: Text('¿En que fecha agregaste este dinero?',
-                  style: TextStyle(color: Colors.grey.shade800)),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                hintText:
-                    '${date.day} ${monthsOfYear[date.month]} ${date.year}', // Customized hint text
-                border: OutlineInputBorder(
-                  // Customized border
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide(
-                    color: Color.fromARGB(255, 15, 182, 138),
-                  ),
-                ),
-              ),
-              readOnly: true, // Evita que el usuario escriba manualmente
-              onTap: () {
-                showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                ).then((selectedDate) {
-                  if (selectedDate != null) {
-                    // Actualizar el valor del campo con la fecha seleccionada
-                    // Puedes usar el controlador del campo para hacerlo
-                    // Ejemplo: _textController.text = selectedDate.toLocal().toString();
-                  }
-                });
-              },
-            ),
+           
+           
+         
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Container(
