@@ -37,15 +37,15 @@ class _CreateAccountState extends State<CreateAccount> {
 
       User? user = userCred.user;
       await user!.updateDisplayName(
-          _nombreController.text.trim() + _apellidoController.text.trim());
-      await user!.updatePhotoURL(
-          selectedAvatarNumber.toString());
+          '${_nombreController.text.trim()} ${_apellidoController.text.trim()}');
+      await user!.updatePhotoURL(selectedAvatarNumber.toString());
       // Add other details
       addUserDetails(
           _nombreController.text.trim(),
           _apellidoController.text.trim(),
           _emailController.text.trim(),
-          _passwordController.text.trim(),selectedAvatarNumber);
+          _passwordController.text.trim(),
+          selectedAvatarNumber);
     }
 
     bool signInSuccess = await signUserIn(context);
@@ -83,15 +83,14 @@ class _CreateAccountState extends State<CreateAccount> {
     print('Login successful');
   }
 
-  Future addUserDetails(
-      String nombre, String apellido, String email, String password, avatar) async {
+  Future addUserDetails(String nombre, String apellido, String email,
+      String password, avatar) async {
     await FirebaseFirestore.instance.collection("Users").add({
       'Nombre': nombre,
       'Apellido': apellido,
       'Email': email,
       'Password': password,
-      'Avatar' : avatar
-      
+      'Avatar': avatar
     });
   }
 
@@ -166,65 +165,68 @@ class _CreateAccountState extends State<CreateAccount> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AvatarImage(
-                          image: 'images/1.png',
-                          isSelected: selectedImage == 'images/1.png',
-                          avatarNumber: 1,
-                          onTap: (number) {
-                            setState(() {
-                              selectedImage = 'images/1.png';
-                              selectedAvatarNumber = number;
-                            });
-                          },
-                        ),
-                        AvatarImage(
-                          image: 'images/2.png',
-                          isSelected: selectedImage == 'images/2.png',
-                          avatarNumber: 2,
-                          onTap: (number) {
-                            setState(() {
-                              selectedImage = 'images/2.png';
-                              selectedAvatarNumber = number;
-                            });
-                          },
-                        ),
-                        AvatarImage(
-                          image: 'images/3.png',
-                          isSelected: selectedImage == 'images/3.png',
-                          avatarNumber: 3,
-                          onTap: (number) {
-                            setState(() {
-                              selectedImage = 'images/3.png';
-                              selectedAvatarNumber = number;
-                            });
-                          },
-                        ),
-                        AvatarImage(
-                          image: 'images/4.png',
-                          isSelected: selectedImage == 'images/4.png',
-                          avatarNumber: 4,
-                          onTap: (number) {
-                            setState(() {
-                              selectedImage = 'images/4.png';
-                              selectedAvatarNumber = number;
-                            });
-                          },
-                        ),
-                        AvatarImage(
-                          image: 'images/5.png',
-                          isSelected: selectedImage == 'images/5.png',
-                          avatarNumber: 5,
-                          onTap: (number) {
-                            setState(() {
-                              selectedImage = 'images/5.png';
-                              selectedAvatarNumber = number;
-                            });
-                          },
-                        ),
-                      ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AvatarImage(
+                            image: 'images/1.png',
+                            isSelected: selectedImage == 'images/1.png',
+                            avatarNumber: 1,
+                            onTap: (number) {
+                              setState(() {
+                                selectedImage = 'images/1.png';
+                                selectedAvatarNumber = number;
+                              });
+                            },
+                          ),
+                          AvatarImage(
+                            image: 'images/2.png',
+                            isSelected: selectedImage == 'images/2.png',
+                            avatarNumber: 2,
+                            onTap: (number) {
+                              setState(() {
+                                selectedImage = 'images/2.png';
+                                selectedAvatarNumber = number;
+                              });
+                            },
+                          ),
+                          AvatarImage(
+                            image: 'images/3.png',
+                            isSelected: selectedImage == 'images/3.png',
+                            avatarNumber: 3,
+                            onTap: (number) {
+                              setState(() {
+                                selectedImage = 'images/3.png';
+                                selectedAvatarNumber = number;
+                              });
+                            },
+                          ),
+                          AvatarImage(
+                            image: 'images/4.png',
+                            isSelected: selectedImage == 'images/4.png',
+                            avatarNumber: 4,
+                            onTap: (number) {
+                              setState(() {
+                                selectedImage = 'images/4.png';
+                                selectedAvatarNumber = number;
+                              });
+                            },
+                          ),
+                          AvatarImage(
+                            image: 'images/5.png',
+                            isSelected: selectedImage == 'images/5.png',
+                            avatarNumber: 5,
+                            onTap: (number) {
+                              setState(() {
+                                selectedImage = 'images/5.png';
+                                selectedAvatarNumber = number;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40),
