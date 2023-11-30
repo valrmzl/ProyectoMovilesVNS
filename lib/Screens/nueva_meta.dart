@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_vsn/Screens/ahorros.dart';
 import 'package:proyecto_vsn/firebase_options.dart';
 
 //instalamos la coleccion a firebase
@@ -37,26 +39,27 @@ class _NuevaMetaState extends State<NuevaMeta> {
   }
 
 
-  void _guardarAhorroFireBase() async {
+  void _guardarAhorroFireBase(Map<String, dynamic> data) async {
     try {
-      CollectionReference testCollection = FirebaseFirestore.instance.collection("Ahorros");
+      
+       // Obtener el usuario actualmente autenticado
+      User? user = FirebaseAuth.instance.currentUser;
+
+     
+    if (user != null) {
+        CollectionReference testCollection = FirebaseFirestore.instance.collection("Ahorros");
 
       DateTime now = DateTime.now();
       // Convierte el valor del campo 'Monto' a un entero
       int monto = int.tryParse(montoAhorro.text) ?? 0;
-
-
-
-      Map<String, dynamic> data = {
-        'IdUsuario': 1,
-        'Nombre': nombreAhorro.text,
-        'Monto': monto,
-        'Fuente': fuenteAhorro.text,
-        'Fecha': fechaSeleccionada != null ? Timestamp.fromDate(fechaSeleccionada!) : null
-      };
-
+      //int progresoInicial = 
+      
+      data['IdUsuario'] = user.uid;
       await testCollection.add(data);
       print("Egreso agregado exitosamente");
+    }else{
+
+    }
     } catch (e) {
       print("Error al agregar el egreso: $e");
     }
@@ -189,8 +192,22 @@ class _NuevaMetaState extends State<NuevaMeta> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    _guardarAhorroFireBase();
+                    int monto = int.tryParse(montoAhorro.text) ?? 0; 
+                    Map<String, dynamic> data = {
+                                'Monto': monto,
+                                'Fecha': fechaSeleccionada != null
+                                    ? Timestamp.fromDate(fechaSeleccionada!)
+                                    : Timestamp.fromDate(DateTime.now()),
+                                'Nombre': nombreAhorro.text,
+                                'Fuente': fuenteAhorro.text,
+                                "Progreso": 5.0
+                              };
+                    Navigator.pop(context
+                    //Ahorro(nombre: nombre, meta: meta, origen: origen, fecha: fecha, progreso: progreso, IdUsuario: IdUsuario)
+                   
+                    
+                    );
+                    _guardarAhorroFireBase(data);
                   },
                   child: Text(
                     'Hecho',
