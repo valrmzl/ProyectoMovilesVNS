@@ -142,9 +142,14 @@ class _BalanceState extends State<Balance> {
     // Obtener el usuario actualmente autenticado
     currentUser = await FirebaseAuth.instance.currentUser;
     egresos = await loadFirebaseDataEgreso();
-    total_egresos = egresos.map((item) => item.Monto).reduce((a, b) => a + b);
+    print(egresos.toString());
+    total_egresos = egresos.isEmpty
+        ? 0
+        : egresos.map((item) => item.Monto).reduce((a, b) => a + b);
     ingresos = await loadFirebaseDataIngreso();
-    total_ingresos = ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
+    total_ingresos = ingresos.isEmpty
+        ? 0
+        : ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
     total = total_ingresos - total_egresos;
     todos = todos + ingresos + egresos;
     todos.sort((a, b) => a.Fecha.compareTo(b.Fecha));
