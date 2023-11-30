@@ -20,7 +20,8 @@ class Balance extends StatefulWidget {
 }
 
 class _BalanceState extends State<Balance> {
-  DateTime? selectedDay;
+  DateTime? selectedDay; // Agrega una variable para el día seleccionado
+  DateTime? get selectedDayValue => selectedDay;
   late List<Ingreso> ingresos;
   late List<Egreso> egresos;
   User? currentUser;
@@ -101,7 +102,34 @@ class _BalanceState extends State<Balance> {
 
       return lista;
     } catch (e) {
-      print('Error loading ingresos from Firebase: $e');
+      return []; // o manejar el error según tus necesidades
+    }
+  }
+
+  Future<List<Ingreso>> loadFirebaseDataIngresoFiltro() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    DateTime startOfDay =
+        DateTime(selectedDay!.year, selectedDay!.month, selectedDay!.day);
+    DateTime endOfDay = DateTime(
+        selectedDay!.year, selectedDay!.month, selectedDay!.day, 23, 59, 59);
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
+    }
+    String userId = user.uid;
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Ingresos')
+          .where('IdUsuario', isEqualTo: userId)
+          .where('Fecha', isGreaterThanOrEqualTo: startOfDay)
+          .where('Fecha', isLessThan: endOfDay)
+          .get();
+
+      List<Ingreso> lista = querySnapshot.docs
+          .map((DocumentSnapshot document) => Ingreso.fromSnapshot(document))
+          .toList();
+      return lista;
+    } catch (e) {
       return []; // o manejar el error según tus necesidades
     }
   }
@@ -126,7 +154,34 @@ class _BalanceState extends State<Balance> {
 
       return lista;
     } catch (e) {
-      print('Error loading egresos from Firebase: $e');
+      return []; // o manejar el error según tus necesidades
+    }
+  }
+
+  Future<List<Egreso>> loadFirebaseDataEgresoFiltro() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    DateTime startOfDay =
+        DateTime(selectedDay!.year, selectedDay!.month, selectedDay!.day);
+    DateTime endOfDay = DateTime(
+        selectedDay!.year, selectedDay!.month, selectedDay!.day, 23, 59, 59);
+    if (user == null) {
+      // El usuario no está autenticado, manejar según tus necesidades
+      return [];
+    }
+    String userId = user.uid;
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Egresos')
+          .where('IdUsuario', isEqualTo: userId)
+          .where('Fecha', isGreaterThanOrEqualTo: startOfDay)
+          .where('Fecha', isLessThan: endOfDay)
+          .get();
+
+      List<Egreso> lista = querySnapshot.docs
+          .map((DocumentSnapshot document) => Egreso.fromSnapshot(document))
+          .toList();
+      return lista;
+    } catch (e) {
       return []; // o manejar el error según tus necesidades
     }
   }
@@ -138,11 +193,15 @@ class _BalanceState extends State<Balance> {
     return lista;
   }
 
-  Future<dynamic> getData() async {
+  Future<void> getData() async {
     // Obtener el usuario actualmente autenticado
+    if (selectedDay != null) {
+      print('entra');
+      await getDataFiltrada();
+      return;
+    }
     currentUser = await FirebaseAuth.instance.currentUser;
     egresos = await loadFirebaseDataEgreso();
-    print(egresos.toString());
     total_egresos = egresos.isEmpty
         ? 0
         : egresos.map((item) => item.Monto).reduce((a, b) => a + b);
@@ -152,6 +211,15 @@ class _BalanceState extends State<Balance> {
         : ingresos.map((item) => item.Monto).reduce((a, b) => a + b);
     total = total_ingresos - total_egresos;
     todos = todos + ingresos + egresos;
+    todos.sort((a, b) => a.Fecha.compareTo(b.Fecha));
+  }
+
+  Future<dynamic> getDataFiltrada() async {
+    // Obtener el usuario actualmente autenticado
+    currentUser = await FirebaseAuth.instance.currentUser;
+    egresos = await loadFirebaseDataEgresoFiltro();
+    ingresos = await loadFirebaseDataIngresoFiltro();
+    todos = [] + ingresos + egresos;
     todos.sort((a, b) => a.Fecha.compareTo(b.Fecha));
   }
 
@@ -174,7 +242,46 @@ class _BalanceState extends State<Balance> {
                 SliverToBoxAdapter(
                   child: SizedBox(height: 280, child: _head(context)),
                 ),
-                SliverToBoxAdapter(child: Calendar()),
+                SliverToBoxAdapter(
+                    child: SafeArea(
+                  child: TableCalendar(
+                    firstDay: DateTime.utc(2022, 01, 01),
+                    lastDay: DateTime.utc(2032, 01, 01),
+                    focusedDay: DateTime.now(),
+                    headerStyle: HeaderStyle(
+                      titleTextStyle: TextStyle(
+                          fontSize: 25,
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    selectedDayPredicate: (DateTime day) {
+                      // Personaliza el color del día seleccionado aquí
+                      return isSameDay(selectedDay,
+                          day); // Cambia el color solo para el día seleccionado
+                    },
+                    onDaySelected: (selected, focused) async {
+                      selectedDay = selected; // Actualiza el día seleccionado
+                      await getData();
+                      print('todos');
+                      print(todos);
+                      setState(() {});
+                    },
+                    calendarStyle: CalendarStyle(
+                      selectedDecoration: BoxDecoration(
+                        color: selectedDay != null
+                            ? Colors.blue
+                            : Colors
+                                .transparent, // Cambia el color del día seleccionado aquí
+                        shape: BoxShape
+                            .circle, // Opcional: puedes personalizar la forma
+                      ),
+                      selectedTextStyle: TextStyle(
+                        color: Colors
+                            .white, // Opcional: cambia el color del texto en el día seleccionado
+                      ),
+                    ),
+                  ),
+                )),
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
