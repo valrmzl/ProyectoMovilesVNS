@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class AgregarDineroAhorro extends StatefulWidget {
   final String documentoId;
 
-  const AgregarDineroAhorro({required this.documentoId, Key? key}) : super(key: key);
+  const AgregarDineroAhorro({required this.documentoId, Key? key})
+      : super(key: key);
 
   @override
   State<AgregarDineroAhorro> createState() => _AgregarDineroAhorroState();
@@ -20,7 +21,7 @@ class _AgregarDineroAhorroState extends State<AgregarDineroAhorro> {
     print('ID del Documento: ${widget.documentoId}');
   }
 
-  void actualizarCampo(String documentoId, int nuevoProgreso) async {
+  actualizarCampo(String documentoId, int nuevoProgreso) async {
     try {
       // Obtener el valor actual de 'Progreso'
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -28,10 +29,10 @@ class _AgregarDineroAhorroState extends State<AgregarDineroAhorro> {
           .doc(documentoId)
           .get();
 
-      int progresoActual = snapshot['Progreso'] ?? 0;
+      double progresoActual = snapshot['Progreso'] ?? 0;
 
       // Sumar el valor existente y el nuevo valor introducido
-      int progresoTotal = progresoActual + nuevoProgreso;
+      double progresoTotal = progresoActual + nuevoProgreso;
 
       // Actualizar el campo 'Progreso'
       await FirebaseFirestore.instance
@@ -83,7 +84,8 @@ class _AgregarDineroAhorroState extends State<AgregarDineroAhorro> {
                   border: OutlineInputBorder(
                     // Customized border
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: Color.fromARGB(255, 15, 182, 138)),
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 15, 182, 138)),
                   ),
                 ),
               ),
@@ -92,13 +94,15 @@ class _AgregarDineroAhorroState extends State<AgregarDineroAhorro> {
                 child: Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
-                      actualizarCampo(widget.documentoId, int.parse(suma.text));
+                      await actualizarCampo(
+                          widget.documentoId, int.parse(suma.text));
                     },
                     child: Text(
                       'Agregar dinero',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

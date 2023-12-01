@@ -18,13 +18,9 @@ class _NuevaMetaState extends State<NuevaMeta> {
   final nombreAhorro = TextEditingController();
   final montoAhorro = TextEditingController();
 
-
-
   DateTime? fechaSeleccionada;
 
-  
-
-   Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = (await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -38,28 +34,24 @@ class _NuevaMetaState extends State<NuevaMeta> {
     }
   }
 
-
   void _guardarAhorroFireBase(Map<String, dynamic> data) async {
     try {
-      
-       // Obtener el usuario actualmente autenticado
+      // Obtener el usuario actualmente autenticado
       User? user = FirebaseAuth.instance.currentUser;
 
-     
-    if (user != null) {
-        CollectionReference testCollection = FirebaseFirestore.instance.collection("Ahorros");
+      if (user != null) {
+        CollectionReference testCollection =
+            FirebaseFirestore.instance.collection("Ahorros");
 
-      DateTime now = DateTime.now();
-      // Convierte el valor del campo 'Monto' a un entero
-      int monto = int.tryParse(montoAhorro.text) ?? 0;
-      //int progresoInicial = 
-      
-      data['IdUsuario'] = user.uid;
-      await testCollection.add(data);
-      print("Egreso agregado exitosamente");
-    }else{
+        DateTime now = DateTime.now();
+        // Convierte el valor del campo 'Monto' a un entero
+        int monto = int.tryParse(montoAhorro.text) ?? 0;
+        //int progresoInicial =
 
-    }
+        data['IdUsuario'] = user.uid;
+        await testCollection.add(data);
+        print("Egreso agregado exitosamente");
+      } else {}
     } catch (e) {
       print("Error al agregar el egreso: $e");
     }
@@ -114,16 +106,16 @@ class _NuevaMetaState extends State<NuevaMeta> {
               ),
             ),
             TextField(
-              controller: nombreAhorro,
+                controller: nombreAhorro,
                 decoration: InputDecoration(
-              hintText: 'Nombre de tu meta', // Customized hint text
-              border: OutlineInputBorder(
-                // Customized border
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide:
-                    BorderSide(color: Color.fromARGB(255, 15, 182, 138)),
-              ),
-            )),
+                  hintText: 'Nombre de tu meta', // Customized hint text
+                  border: OutlineInputBorder(
+                    // Customized border
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 15, 182, 138)),
+                  ),
+                )),
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0, top: 15),
               child: Text(
@@ -132,34 +124,34 @@ class _NuevaMetaState extends State<NuevaMeta> {
               ),
             ),
             TextField(
-              controller: montoAhorro,
+                controller: montoAhorro,
                 decoration: InputDecoration(
-              hintText: r'$0.00', // Customized hint text
-              border: OutlineInputBorder(
-                // Customized border
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide: BorderSide(
-                  color: Color.fromARGB(255, 15, 182, 138),
-                ),
-              ),
-            )),
+                  hintText: r'$0.00', // Customized hint text
+                  border: OutlineInputBorder(
+                    // Customized border
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 15, 182, 138),
+                    ),
+                  ),
+                )),
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0, top: 15),
               child: Text('¿Donde tendrás el dinero de tu menta?',
                   style: TextStyle(color: Colors.grey.shade800)),
             ),
             TextField(
-              controller: fuenteAhorro,
+                controller: fuenteAhorro,
                 decoration: InputDecoration(
-              hintText: 'Cuenta BBVA', // Customized hint text
-              border: OutlineInputBorder(
-                // Customized border
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide: BorderSide(
-                  color: Color.fromARGB(255, 15, 182, 138),
-                ),
-              ),
-            )),
+                  hintText: 'Cuenta BBVA', // Customized hint text
+                  border: OutlineInputBorder(
+                    // Customized border
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide(
+                      color: Color.fromARGB(255, 15, 182, 138),
+                    ),
+                  ),
+                )),
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0, top: 15),
               child: Text('¿Para cuándo necesitas cumplir con esa meta?',
@@ -170,11 +162,11 @@ class _NuevaMetaState extends State<NuevaMeta> {
                   _selectDate(context);
                 },
                 readOnly: true,
-              controller: TextEditingController(
-                text: fechaSeleccionada != null
-                    ? "${fechaSeleccionada!.day} ${monthsOfYear[fechaSeleccionada!.month - 1]} ${fechaSeleccionada!.year}"
-                    : "Selecciona una fecha",
-              ),
+                controller: TextEditingController(
+                  text: fechaSeleccionada != null
+                      ? "${fechaSeleccionada!.day} ${monthsOfYear[fechaSeleccionada!.month - 1]} ${fechaSeleccionada!.year}"
+                      : "Selecciona una fecha",
+                ),
                 decoration: InputDecoration(
                   hintText:
                       '${date.day} ${monthsOfYear[date.month]} ${date.year}', // Customized hint text
@@ -192,21 +184,20 @@ class _NuevaMetaState extends State<NuevaMeta> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    int monto = int.tryParse(montoAhorro.text) ?? 0; 
+                    int monto = int.tryParse(montoAhorro.text) ?? 0;
                     Map<String, dynamic> data = {
-                                'Monto': monto,
-                                'Fecha': fechaSeleccionada != null
-                                    ? Timestamp.fromDate(fechaSeleccionada!)
-                                    : Timestamp.fromDate(DateTime.now()),
-                                'Nombre': nombreAhorro.text,
-                                'Fuente': fuenteAhorro.text,
-                                "Progreso": 5.0
-                              };
+                      'Monto': monto,
+                      'Fecha': fechaSeleccionada != null
+                          ? Timestamp.fromDate(fechaSeleccionada!)
+                          : Timestamp.fromDate(DateTime.now()),
+                      'Nombre': nombreAhorro.text,
+                      'Fuente': fuenteAhorro.text,
+                      "Progreso": 0.0
+                    };
                     Navigator.pop(context
-                    //Ahorro(nombre: nombre, meta: meta, origen: origen, fecha: fecha, progreso: progreso, IdUsuario: IdUsuario)
-                   
-                    
-                    );
+                        //Ahorro(nombre: nombre, meta: meta, origen: origen, fecha: fecha, progreso: progreso, IdUsuario: IdUsuario)
+
+                        );
                     _guardarAhorroFireBase(data);
                   },
                   child: Text(
