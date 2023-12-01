@@ -81,7 +81,12 @@ class EgresoItem extends StatelessWidget {
                                 const Color.fromARGB(255, 229, 132, 164)),
                             SizedBox(width: 8), // Espacio entre chips
                             categoriaChip(
-                                tipoEgreso, Color.fromARGB(255, 226, 228, 136)),
+                                tipoEgreso,
+                                tipoEgreso == 'Efectivo'
+                                    ? Color.fromARGB(255, 146, 132, 229)
+                                    : tipoEgreso == 'Crédito'
+                                        ? Color.fromARGB(255, 226, 228, 136)
+                                        : Color.fromARGB(255, 218, 132, 42)),
                           ],
                         ),
                         Text(

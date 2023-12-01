@@ -232,11 +232,12 @@ class _BalanceState extends State<Balance> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is being fetched, display a loading indicator or placeholder
-          return Center(child:CupertinoActivityIndicator(
-
+          return Center(
+              child: CupertinoActivityIndicator(
             animating: true,
-        radius: 30.0, // Ajusta el tamaño del indicador
-          ));;
+            radius: 30.0, // Ajusta el tamaño del indicador
+          ));
+          ;
         } else if (snapshot.hasError) {
           // Handle errors
           return Text('Error: ${snapshot.error}');
@@ -330,7 +331,7 @@ class _BalanceState extends State<Balance> {
                               fontWeight: FontWeight.w600,
                             )),
                         trailing: Text(
-                          todos[index].Monto.toString(),
+                          "\$${todos[index].Monto}",
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 19,

@@ -146,11 +146,12 @@ class _EgresosState extends State<Egresos> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child:CupertinoActivityIndicator(
-
+          return Center(
+              child: CupertinoActivityIndicator(
             animating: true,
-        radius: 30.0, // Ajusta el tamaño del indicador
-          ));;
+            radius: 30.0, // Ajusta el tamaño del indicador
+          ));
+          ;
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -196,6 +197,7 @@ class _EgresosState extends State<Egresos> {
                                 if (result != null) {
                                   setState(() {
                                     items.insert(0, result);
+                                    total += result.Monto;
                                     print('items:');
                                     print(items);
                                   });

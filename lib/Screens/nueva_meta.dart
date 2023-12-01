@@ -194,10 +194,16 @@ class _NuevaMetaState extends State<NuevaMeta> {
                       'Fuente': fuenteAhorro.text,
                       "Progreso": 0.0
                     };
-                    Navigator.pop(context
-                        //Ahorro(nombre: nombre, meta: meta, origen: origen, fecha: fecha, progreso: progreso, IdUsuario: IdUsuario)
-
-                        );
+                    Navigator.pop(
+                        context,
+                        Ahorro(
+                            nombre: nombreAhorro.text,
+                            meta: double.parse(montoAhorro.text),
+                            origen: fuenteAhorro.text,
+                            fecha: fechaSeleccionada!,
+                            progreso: 0,
+                            IdUsuario: 'asd',
+                            id: '1'));
                     _guardarAhorroFireBase(data);
                   },
                   child: Text(

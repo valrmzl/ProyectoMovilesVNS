@@ -52,6 +52,7 @@ class IngresoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeBloc, ThemeState>(builder: (context, themeState) {
+      print(tipoIngreso);
       return Card(
         color: themeState.themeData.colorScheme.surfaceVariant,
         margin: EdgeInsets.all(16),
@@ -75,11 +76,25 @@ class IngresoItem extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            categoriaChip(categoria,
-                                const Color.fromARGB(255, 229, 132, 164)),
+                            categoriaChip(
+                                categoria,
+                                categoria == 'Aguinaldo'
+                                    ? const Color.fromARGB(255, 229, 132, 164)
+                                    : categoria == 'Salario'
+                                        ? Color.fromARGB(255, 229, 189, 132)
+                                        : categoria == 'Bonos'
+                                            ? Color.fromARGB(255, 132, 229, 134)
+                                            : categoria == 'Emprendimiento'
+                                                ? Color.fromARGB(
+                                                    255, 229, 132, 161)
+                                                : Color.fromARGB(
+                                                    255, 7, 14, 238)),
                             SizedBox(width: 8), // Espacio entre chips
-                            categoriaChip(tipoIngreso,
-                                Color.fromARGB(255, 226, 228, 136)),
+                            categoriaChip(
+                                tipoIngreso,
+                                tipoIngreso == 'Transferencia'
+                                    ? Color.fromARGB(255, 146, 132, 229)
+                                    : Color.fromARGB(255, 226, 228, 136)),
                           ],
                         ),
                         Text(

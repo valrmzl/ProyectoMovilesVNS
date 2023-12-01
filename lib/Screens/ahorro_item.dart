@@ -58,7 +58,7 @@ class _AhorroItemState extends State<AhorroItem> {
         },
         child: Card(
           color: themeState.themeData.colorScheme.surfaceVariant,
-          margin: EdgeInsets.all(16),
+          margin: const EdgeInsets.all(16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
@@ -75,7 +75,7 @@ class _AhorroItemState extends State<AhorroItem> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 10.0),
+                            padding: const EdgeInsets.only(top: 10.0),
                             child: Text(widget.data.origen),
                           ),
                           Text(

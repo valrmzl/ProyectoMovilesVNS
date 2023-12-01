@@ -29,20 +29,18 @@ class Ahorro {
     required this.IdUsuario,
   });
 
-
   factory Ahorro.fromSnapshot(DocumentSnapshot snapshot) {
     try {
       Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
       print('Data from Firestore: $data');
       return Ahorro(
-        id: snapshot.id, 
+        id: snapshot.id,
         fecha: data['Fecha'].toDate() ?? DateTime.now(),
         IdUsuario: data['IdUsuario'].toString() ?? '',
         meta: (data['Monto'] ?? 0.0).toDouble(),
         nombre: data['Nombre'] ?? '',
         origen: data['Origen'] ?? '',
         progreso: data['Progreso'] ?? '',
-
       );
     } catch (e, stackTrace) {
       print('Error creating Egreso from snapshot: $e');
@@ -58,9 +56,6 @@ class Ahorro {
       );
     }
   }
-
-
-
 }
 
 class Ahorros extends StatefulWidget {
@@ -74,7 +69,7 @@ class _AhorrosState extends State<Ahorros> {
   late List<Ahorro> items;
   double total = 0;
 
-   Future<List<Ahorro>> loadFirestoreData() async {
+  Future<List<Ahorro>> loadFirestoreData() async {
     // Obtener el usuario actualmente autenticado
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -99,8 +94,6 @@ class _AhorrosState extends State<Ahorros> {
       return []; // o manejar el error según tus necesidades
     }
   }
-
-
 
   @override
   void initState() {
@@ -150,11 +143,13 @@ class _AhorrosState extends State<Ahorros> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child:CupertinoActivityIndicator(
-
+          return Center(
+              child: CupertinoActivityIndicator(
             animating: true,
-        radius: 30.0, // Ajusta el tamaño del indicador
-          ));;       } else if (snapshot.hasError) {
+            radius: 30.0, // Ajusta el tamaño del indicador
+          ));
+          ;
+        } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           items = snapshot.data!;
@@ -184,13 +179,21 @@ class _AhorrosState extends State<Ahorros> {
                             Padding(
                               padding: const EdgeInsets.only(right: 20.0),
                               child: TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   // Navigate to the second screen
-                                  Navigator.push(
+                                  var result = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => NuevaMeta()),
                                   );
+                                  if (result != null) {
+                                    setState(() {
+                                      items.insert(0, result);
+                                      total += result.progreso;
+                                      print('items:');
+                                      print(items);
+                                    });
+                                  }
                                 },
                                 child: Text('+ Nueva meta',
                                     style: TextStyle(
