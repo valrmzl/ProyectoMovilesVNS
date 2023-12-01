@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -145,7 +146,11 @@ class _EgresosState extends State<Egresos> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child:CupertinoActivityIndicator(
+
+            animating: true,
+        radius: 30.0, // Ajusta el tamaño del indicador
+          ));;
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -231,7 +232,11 @@ class _BalanceState extends State<Balance> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is being fetched, display a loading indicator or placeholder
-          return Center(child: CircularProgressIndicator());
+          return Center(child:CupertinoActivityIndicator(
+
+            animating: true,
+        radius: 30.0, // Ajusta el tamaño del indicador
+          ));;
         } else if (snapshot.hasError) {
           // Handle errors
           return Text('Error: ${snapshot.error}');

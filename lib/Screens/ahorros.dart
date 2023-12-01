@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,17 +59,6 @@ class Ahorro {
     }
   }
 
-  /*
-  factory Ahorro.fromJson(Map<String, dynamic> json) {
-    return Ahorro(
-      nombre: json['nombre'] as String,
-      meta: json['meta'].toDouble() as double,
-      origen: json['origen'] as String,
-      fecha: DateTime.parse(json['fecha']) as DateTime,
-      progreso: json['progreso'].toDouble() as double,
-      IdUsuario: "aa"
-    );
-  }*/
 
 
 }
@@ -110,16 +100,6 @@ class _AhorrosState extends State<Ahorros> {
     }
   }
 
-  /*
-  Future<List<Ahorro>> loadJsonData() async {
-    final jsonString = await rootBundle.loadString('lib/data/ahorro.json');
-    final jsonData = json.decode(jsonString);
-    List<Ahorro> lista = [];
-    for (int i = 0; i < jsonData.length; i++) {
-      lista.add(Ahorro.fromJson(jsonData[i]));
-    }
-    return lista;
-  }*/
 
 
   @override
@@ -170,7 +150,11 @@ class _AhorrosState extends State<Ahorros> {
       future: loadFirestoreData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());        } else if (snapshot.hasError) {
+          return Center(child:CupertinoActivityIndicator(
+
+            animating: true,
+        radius: 30.0, // Ajusta el tamaño del indicador
+          ));;       } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
           items = snapshot.data!;

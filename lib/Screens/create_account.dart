@@ -27,34 +27,51 @@ class _CreateAccountState extends State<CreateAccount> {
   // Variable to track the number of the selected avatar
   int selectedAvatarNumber = 0;
 
+  // Checkbox state
+  bool acceptTerms = false;
+
+  // Toggle checkbox state
+  void toggleAcceptTerms() {
+    setState(() {
+      acceptTerms = !acceptTerms;
+    });
+  }
+
   Future signUp() async {
-    if (confirmasPassword()) {
+    if (confirmasPassword() && acceptTerms) {
       // Create the user
-      UserCredential userCred = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim());
+      UserCredential userCred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
       User? user = userCred.user;
-      await user!.updateDisplayName(
-          '${_nombreController.text.trim()} ${_apellidoController.text.trim()}');
+      await user!.updateDisplayName('${_nombreController.text.trim()} ${_apellidoController.text.trim()}');
       await user!.updatePhotoURL(selectedAvatarNumber.toString());
       // Add other details
       addUserDetails(
-          _nombreController.text.trim(),
-          _apellidoController.text.trim(),
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-          selectedAvatarNumber);
-    }
+        _nombreController.text.trim(),
+        _apellidoController.text.trim(),
+        _emailController.text.trim(),
+        _passwordController.text.trim(),
+        selectedAvatarNumber,
+      );
 
-    bool signInSuccess = await signUserIn(context);
+      bool signInSuccess = await signUserIn(context);
 
-    if (signInSuccess) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
+      if (signInSuccess) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(),
+          ),
+        );
+      }
+    } else {
+      // Mostrar un mensaje indicando que los términos y condiciones deben ser aceptados
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Por favor, acepta los términos y condiciones."),
         ),
       );
     }
@@ -83,8 +100,7 @@ class _CreateAccountState extends State<CreateAccount> {
     print('Login successful');
   }
 
-  Future addUserDetails(String nombre, String apellido, String email,
-      String password, avatar) async {
+  Future addUserDetails(String nombre, String apellido, String email, String password, avatar) async {
     await FirebaseFirestore.instance.collection("Users").add({
       'Nombre': nombre,
       'Apellido': apellido,
@@ -95,8 +111,7 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 
   bool confirmasPassword() {
-    if (_passwordController.text.trim() ==
-        _confirmpasswordController.text.trim()) {
+    if (_passwordController.text.trim() == _confirmpasswordController.text.trim()) {
       return true;
     } else {
       return false;
@@ -137,8 +152,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         ),
                         Text(
                           "Create an account",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.grey[700]),
+                          style: TextStyle(fontSize: 15, color: Colors.grey[700]),
                         ),
                       ],
                     ),
@@ -164,6 +178,18 @@ class _CreateAccountState extends State<CreateAccount> {
                         ],
                       ),
                     ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: acceptTerms,
+                            onChanged: (value) {
+                              toggleAcceptTerms();
+                            },
+                          ),
+                          Text("Acepto terminos y condiciones", style: TextStyle(color: Colors.black),),
+                        ],
+                      ),
                     SizedBox(height: 20),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -284,7 +310,19 @@ class _CreateAccountState extends State<CreateAccount> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Checkbox(
+                          value: acceptTerms,
+                          onChanged: (value) {
+                            toggleAcceptTerms();
+                          },
+                        ),
+                        Text("I accept the terms and conditions"),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -295,15 +333,13 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
-  Widget makeInput(
-      {label, obscureText = false, TextEditingController? controller}) {
+  Widget makeInput({label, obscureText = false, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
           label,
-          style: TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
         ),
         SizedBox(
           height: 5,
@@ -314,10 +350,8 @@ class _CreateAccountState extends State<CreateAccount> {
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-            border:
-                OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            border: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
           ),
         ),
         SizedBox(
