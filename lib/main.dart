@@ -11,14 +11,9 @@ import 'package:proyecto_vsn/theme/bloc/theme_bloc.dart';
 
 import 'firebase_options.dart';
 
-
-
 void main() async {
-
-
   //async porque vamos a usar BD
   WidgetsFlutterBinding.ensureInitialized();
-
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
